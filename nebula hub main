@@ -965,7 +965,7 @@ LoadedIn:Connect(function()
 	Management.newContent("Game")
 		:setSideButtonTitle("Game")
 		:addWindowTitle("Player")
-		:addSpacialLine()
+	--	:addSpacialLine()
 		:addWindowSubtitle("ESP")
 		:addUnit("Players ESP", Enums.UnitType.Switch, {
 			onActivated = function(MainUnit, Value)			
