@@ -1057,6 +1057,7 @@ LoadedIn:Connect(function()
 						esp.OutlineColor = Color3.fromRGB(255, 97, 97)
 					else
 						local esp = Storage:FindFirstChild(player.Name)
+						esp.Adornee = player.Character
 						esp.FillColor = Color3.fromRGB(157, 255, 111)
 						esp.OutlineColor = Color3.fromRGB(157, 255, 111)
 					end
