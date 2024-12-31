@@ -972,10 +972,10 @@ Management.initialize()
 LoadedIn:Connect(function()
 	Management.newContent("Game")
 	:setSideButtonTitle("Game")
-	:addWindowTitle("Player")
+	:addWindowTitle("Features")
 	:addSpacialLine()
 	:addWindowSubtitle("ESP")
-	:addUnit("Players ESP", Enums.UnitType.Switch, {
+	:addUnit("Players", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)			
 			local function InitializeESP()
 				for i, esp in pairs(GlobalData.ESPs) do
@@ -986,9 +986,10 @@ LoadedIn:Connect(function()
 					local newHighlight = Instance.new("Highlight", Storage)
 					newHighlight.Name = Player.Name
 					newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
-					newHighlight.FillTransparency = 0.5
+					newHighlight.FillTransparency = 0.35
 					newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
-					newHighlight.OutlineTransparency = 0.6
+					newHighlight.OutlineTransparency = 0.4
+					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
 					table.insert(GlobalData.ESPs, newHighlight);
 				end
@@ -1046,10 +1047,24 @@ LoadedIn:Connect(function()
 				InitializeESP()
 				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
 					if player == findSheriff() then
-						local esp = Storage:FindFirstChild(player.Name)
-						esp.Adornee = player.Character
-						esp.FillColor = Color3.fromRGB(105, 125, 255)
-						esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+						if GlobalData.OriginalSheriff then
+							if player ~= GlobalData.OriginalSheriff then
+								local esp = Storage:FindFirstChild(player.Name)
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(255, 237, 98)
+								esp.OutlineColor = Color3.fromRGB(255, 237, 98)
+							else
+								local esp = Storage:FindFirstChild(player.Name)
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(105, 125, 255)
+								esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+							end
+						else
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(105, 125, 255)
+							esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+						end
 					elseif player == findMurderer() then
 						local esp = Storage:FindFirstChild(player.Name)
 						esp.Adornee = player.Character
@@ -1076,6 +1091,10 @@ LoadedIn:Connect(function()
 			GlobalData.Connections["PlayerAdd"] = game:GetService("Players").PlayerAdded:Connect(function()
 				loadEsp()
 			end)
+			
+			GlobalData.Connections["ReceiveReload"] = GlobalData.ReloadESP:Connect(function()
+				loadEsp()
+			end)
 
 			GlobalData.Connections["PlayerRemove"] = game:GetService("Players").PlayerRemoving:Connect(function()
 				loadEsp()
@@ -1091,6 +1110,9 @@ LoadedIn:Connect(function()
 			if GlobalData.Connections["PlayerAdd"] ~= nil then
 				GlobalData.Connections["PlayerAdd"]:Disconnect();
 			end
+			if GlobalData.Connections["ReceiveReload"] ~= nil then
+				GlobalData.Connections["ReceiveReload"]:Disconnect();
+			end
 			for i, esp in pairs(GlobalData.ESPs) do
 				esp:Destroy();
 			end;
@@ -1101,11 +1123,122 @@ LoadedIn:Connect(function()
 		defaultValue = false,
 		cooldown = 0.2,
 	})
-	:addUnit("Walkspeed", Enums.UnitType.Slider, {
+	:addUnit("Dropped Gun", Enums.UnitType.Switch, {
+		onActivated = function(MainUnit, Value)
+			local function TrackGunActions(GunDrop)
+				if GunDrop then
+					GunDrop.Touched:Connect(function(Hit)
+						if game.Players:GetPlayers(Hit.Parent) then
+							GlobalData["GunGetting"] = true
+						end
+					end)
+				end
+			end
+			
+			local function CreateNewGunESP(location)
+				for i, v in pairs(GlobalData.GunESP) do
+					v:Destroy()
+				end
+				
+				local newHighlight = Instance.new("Highlight", Storage)
+				newHighlight.Name = "GunDrop"
+				newHighlight.FillColor = Color3.fromRGB(188, 133, 255)
+				newHighlight.FillTransparency = 0.35
+				newHighlight.OutlineColor = Color3.fromRGB(188, 133, 255)
+				newHighlight.OutlineTransparency = 0.4
+				newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				
+				newHighlight.Adornee = location
+			end
+			
+			for i, possibleGundrop in pairs(workspace:GetDescendants()) do
+				if possibleGundrop.Name == "GunDrop" then
+					CreateNewGunESP(possibleGundrop)
+				end
+			end
+			
+			GlobalData.Connections["GunESP"] = workspace.DescendantAdded:Connect(function(Child)
+				if Child.Name == "GunDrop" then
+					CreateNewGunESP(Child)
+				end
+			end)
+			
+			GlobalData.Connections["GunRemoval"] = workspace.DescendantRemoving:Connect(function(Child)
+				if Child.Name == "GunDrop" then
+					if GlobalData.GunGetting == true then
+						GlobalData.ReloadESP:Fire()
+					end
+				end
+			end)
+		end,
+		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["GunESP"] ~= nil then
+				GlobalData.Connections["GunESP"]:Disconnect();
+			end
+			
+			for i, v in pairs(GlobalData.GunESP) do
+				v:Destroy()
+			end
+		end,
+		otherData = {
+
+		},
+		defaultValue = false,
+		cooldown = 0.2,
+	})
+	:addUnit("Traps", Enums.UnitType.Switch, {
+		onActivated = function(MainUnit, Value)
+			local function CreateTrapESP(location)
+				for i, v in pairs(GlobalData.TrapESP) do
+					v:Destroy()
+				end
+
+				local newHighlight = Instance.new("Highlight", Storage)
+				newHighlight.Name = "Trap"
+				newHighlight.FillColor = Color3.fromRGB(180, 53, 83)
+				newHighlight.FillTransparency = 0.35
+				newHighlight.OutlineColor = Color3.fromRGB(180, 53, 83)
+				newHighlight.OutlineTransparency = 0.4
+				newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+
+				newHighlight.Adornee = location
+			end
+			
+			for i, possibleTrap in pairs(workspace:GetDescendants()) do
+				if possibleTrap.Name == "Trap" then
+					CreateTrapESP(possibleTrap)
+				end
+			end
+			
+			GlobalData.Connections["TrapESP"] = workspace.DescendantAdded:Connect(function(Child)
+				if Child.Name == "Trap" then
+					CreateTrapESP(Child)
+				end
+			end)
+		end,
+		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["TrapESP"] ~= nil then
+				GlobalData.Connections["TrapESP"]:Disconnect();
+			end
+
+			for i, v in pairs(GlobalData.TrapESP) do
+				v:Destroy()
+			end
+		end,
+		otherData = {
+
+		},
+		defaultValue = false,
+		cooldown = 0.2,
+	})
+	:addSpacial()
+	:addWindowSubtitle("Player")
+	:addUnit("WalkSpeed", Enums.UnitType.Slider, {
 		Initialize = function(Unit)
 			Unit.OnValueChanged:Connect(function(Value)
 				pcall(function()
 					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Value
+					GlobalData.PlayerWalkspeed = Value;
 				end)
 			end)
 		end,
@@ -1114,11 +1247,34 @@ LoadedIn:Connect(function()
 		Max = 30,
 		Increment = 1,
 	})
+	:addUnit("Loop WalkSpeed", Enums.UnitType.Switch, {
+		onActivated = function(MainUnit, Value)	
+			GlobalData.Connections["KeepWalkspeed"] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+				if GlobalData.PlayerWalkspeed then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = GlobalData.PlayerWalkspeed
+				end
+			end)
+		end,
+		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["KeepWalkspeed"] ~= nil then
+				GlobalData.Connections["KeepWalkspeed"]:Disconnect()
+			end
+		end,
+		otherData = {
+
+		},
+		defaultValue = false,
+		cooldown = 0.2,
+	})
 	:addUnit("JumpPower", Enums.UnitType.Slider, {
 		Initialize = function(Unit)
 			Unit.OnValueChanged:Connect(function(Value)
+				if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").UseJumpPower == false then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").UseJumpPower = true;
+				end;
 				pcall(function()
 					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower = Value
+					GlobalData.PlayerJumppower = Value
 				end)
 			end)
 		end,
@@ -1127,7 +1283,26 @@ LoadedIn:Connect(function()
 		Max = 100,
 		Increment = 1,
 	})
+	:addUnit("Loop JumpPower", Enums.UnitType.Switch, {
+		onActivated = function(MainUnit, Value)	
+			GlobalData.Connections["KeepJumppower"] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):GetPropertyChangedSignal("JumpPower"):Connect(function()
+				if GlobalData.PlayerJumppower then
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower = GlobalData.PlayerJumppower
+				end
+			end)
+		end,
+		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["KeepJumppower"] ~= nil then
+				GlobalData.Connections["KeepJumppower"]:Disconnect()
+			end
+		end,
+		otherData = {
 
+		},
+		defaultValue = false,
+		cooldown = 0.2,
+	})
+		
 	Management.setOpenedWindow("Home")
 end)
 
