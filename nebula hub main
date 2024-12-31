@@ -3,8 +3,6 @@ NewNebulaHub.Parent = game:GetService("CoreGui");
 
 local Dependencies = NewNebulaHub.Dependencies;
 
-local Manager = Dependencies:WaitForChild("Manager");
-local Services = Dependencies:WaitForChild("Services");
 local Assets = Dependencies:WaitForChild("Assets");
 
 local RunService = game:GetService("RunService");
