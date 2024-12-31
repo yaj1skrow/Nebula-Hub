@@ -927,7 +927,10 @@ end;
 	end;
 end;
 
-Management.newContent("Home")
+Management.initialize()
+
+LoadedIn:Connect(function()
+	Management.newContent("Home")
 	:setSideButtonTitle("Home")
 	:addWindowTitle("Player")
 	:addWindowSubtitle("ESP")
@@ -997,3 +1000,4 @@ Management.newContent("Home")
 
 		};
 	});
+end)
