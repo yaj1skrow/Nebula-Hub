@@ -559,7 +559,7 @@ local Tweenings = {
 	Fading = nil;
 }
 
-local Player = Players.LocalPlayer
+local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 
 local Hovered = false
