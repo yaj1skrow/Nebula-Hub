@@ -924,77 +924,140 @@ end;
 	end;
 end;
 
+local Storage = Instance.new("Folder", Dependencies)
+Storage.Name = "Storage"
+
+local function InitializeStringRandomizer(length)
+	local characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!@#$%^&*/`()|-=+";
+	local RanStr = "";
+	for i = 1, length do
+		local randomIndex = math.random(1, #characters);
+		RanStr = string.format("%s%s", RanStr, string.sub(characters, randomIndex, randomIndex));
+	end;
+	return RanStr;
+end
+
+local GlobalData = {
+	ESPs = {};
+	PlayerRoles = nil;
+	Connections = {}
+}
+
 Management.initialize()
 
 LoadedIn:Connect(function()
-	Management.newContent("Home")
-	:setSideButtonTitle("Home")
-	:addWindowTitle("Player")
-	:addWindowSubtitle("ESP")
-	:addUnit("TestSwitch", Enums.UnitType.Switch, {
-		Initialize = function(Unit)
-			print(Unit.TurnedOn)
-		end,
-		onActivated = function(MainUnit, Value)
-			print(MainUnit.Data.otherData.ToPrintWhenActive, Value)
-		end,
-		onDeactivated = function(MainUnit, Value)
-			print(MainUnit.Data.otherData.ToPrintNotWhenActive, Value)
-		end,
-		cooldown = .5,
-		defaultValue = true;
-		otherData = {
-			["ToPrintWhenActive"] = "hi";
-			["ToPrintNotWhenActive"] = "hello?";
-		}
-	})
-	:addUnit("TestString", Enums.UnitType.String, {
-		Initialize = function(Unit)
-			print(Unit.InitialValue)
-		end,
-		onEntered = function(MainUnit, Value)
-			print(Value)
-		end,
-		cooldown = .1;
-		defaultValue = "Starting Value";
-		otherData = {
+	Management.newContent("Game")
+		:setSideButtonTitle("Game")
+		:addWindowTitle("Player")
+		:addSpacialLine()
+		:addWindowSubtitle("ESP")
+		:addUnit("Players ESP", Enums.UnitType.Switch, {
+			onActivated = function(MainUnit, Value)			
+				local function InitializeESP()
+					for i, esp in pairs(GlobalData.ESPs) do
+						esp:Destroy();
+					end;
 
-		};
-	})
-	:addUnit("TestDropdown", Enums.UnitType.Dropdown, {
-		Initialize = function(Unit)
-			print(Unit.Selected)
-			Unit.OnValueChanged:Connect(function(NewValue)
-				print(NewValue.Name)
-			end);
-		end,
-		createEnums = function(creator)
-			creator({
-				["Test"] = {
-					Value = 0;
-					Name = "Test";
-				};
-				["Test2"] = {
-					Value = 1;
-					Name = "Test2";
-				};
-			});
-		end,
-		cooldown = 0.05,
-	})
-	:addUnit("TestSlider", Enums.UnitType.Slider, {
-		Initialize = function(unit)
-			unit.OnValueChanged:Connect(function(NewValue)
-				print(NewValue)
-			end)
-		end,
-		Min = 0,
-		Max = 100,
-		Increment = 1,
-		cooldown = 0.1,
-		defaultValue = 0;
-		otherData = {
+					for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
+						local newHighlight = Instance.new("Highlight", Storage)
+						newHighlight.Name = Player.Name
+						newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
+						newHighlight.FillTransparency = 0.7
+						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
+						newHighlight.OutlineTransparency = 0.8
+						newHighlight.Adornee = Player.Name
 
-		};
-	});
+						table.insert(GlobalData.ESPs, newHighlight);
+					end
+				end
+
+				local function findSheriff()
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player.Backpack:FindFirstChild("Gun") then
+							return player
+						end
+					end
+
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player.Character:FindFirstChild("Gun") then
+							return player
+						end
+					end
+
+					if GlobalData.PlayerRoles then
+						for player, data in GlobalData.PlayerRoles do
+							if data.Role == "Sheriff" then
+								if game:GetService("Players"):FindFirstChild(player) then
+									return game:GetService("Players"):FindFirstChild(player)
+								end
+							end
+						end
+					end
+				end
+
+				local function findMurderer()
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player.Backpack:FindFirstChild("Knife") then
+							return player
+						end
+					end
+
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player.Character:FindFirstChild("Knife") then
+							return player
+						end
+					end
+
+					if GlobalData.PlayerRoles then
+						for player, data in GlobalData.PlayerRoles do
+							if data.Role == "Murderer" then
+								if game:GetService("Players"):FindFirstChild(player) then
+									return game:GetService("Players"):FindFirstChild(player)
+								end
+							end
+						end
+					end
+				end
+
+				local function loadEsp()
+					InitializeESP()
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player == findSheriff() then
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(105, 125, 255)
+							esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+						elseif player == findMurderer() then
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(255, 97, 97)
+							esp.OutlineColor = Color3.fromRGB(255, 97, 97)
+						else
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.FillColor = Color3.fromRGB(157, 255, 111)
+							esp.OutlineColor = Color3.fromRGB(157, 255, 111)
+						end
+					end
+				end
+
+				GlobalData.Connections["HookRoles"] = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
+					GlobalData.PlayerRoles = RoleData
+					loadEsp()				
+				end)
+
+				loadEsp()
+			end,
+			onDeactivated = function(MainUnit, Value)
+
+			end,
+			otherData = {
+
+			},
+			defaultValue = false,
+			cooldown = 0.2,
+		})
+
+	Management.setOpenedWindow("Home")
 end)
+
+Dependencies.Parent.Name = InitializeStringRandomizer(7)
