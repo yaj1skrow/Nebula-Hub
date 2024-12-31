@@ -528,15 +528,15 @@ Management.Enums = {
 		};
 		["Dropdown"] = {
 			["Value"] = 1;
-			["Name"] = "Switch";
+			["Name"] = "Dropdown";
 		};
 		["Slider"] = {
 			["Value"] = 2;
-			["Name"] = "Switch";
+			["Name"] = "Slider";
 		};
 		["String"] = {
 			["Value"] = 3;
-			["Name"] = "Switch";
+			["Name"] = "String";
 		};
 	};
 };
