@@ -1114,6 +1114,19 @@ LoadedIn:Connect(function()
 		Max = 30,
 		Increment = 1,
 	})
+	:addUnit("JumpPower", Enums.UnitType.Slider, {
+		Initialize = function(Unit)
+			Unit.OnValueChanged:Connect(function(Value)
+				pcall(function()
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower = Value
+				end)
+			end)
+		end,
+		defaultValue = 50,
+		Min = 0,
+		Max = 100,
+		Increment = 1,
+	})
 
 	Management.setOpenedWindow("Home")
 end)
