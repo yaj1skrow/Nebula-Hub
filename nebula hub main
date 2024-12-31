@@ -554,9 +554,84 @@ local Units = {
 
 }
 
+local Tweenings = {
+	Fading = nil;
+}
+
+local Player = Players.LocalPlayer
+local Mouse = Player:GetMouse()
+
+local Hovered = false
+local Holding = false
+local MoveCon = nil
+
+local InitialX, InitialY, UIInitialPos
+
+local ViewPortSize = workspace.Camera.ViewportSize
+
+local MoveTween = nil
+
 local Syntax = 0;
 
+local LoadedIn = Signal.new()
+
 --[[ Creator ]] do
+	function Management.initialize()
+		MainUI.Parent.Dependencies.Audios.Opening:Play();
+		
+		local function Drag()
+			if Holding == false then MoveCon:Disconnect(); return end
+			local distanceMovedX = InitialX - Mouse.X
+			local distanceMovedY = InitialY - Mouse.Y
+
+			MoveTween = TweenService:Create(MainUI, TweenInfo.new(0.3, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Position = UIInitialPos - UDim2.new(0, distanceMovedX, 0, distanceMovedY)}):Play()
+		end
+
+		MainUI.Topbar.DragActivator.MouseEnter:Connect(function()
+			Hovered = true
+		end)
+
+		MainUI.Topbar.DragActivator.MouseLeave:Connect(function()
+			Hovered = false
+		end)
+
+		UserInputService.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				Holding = Hovered
+				if Holding then
+					InitialX, InitialY = Mouse.X, Mouse.Y
+					UIInitialPos = MainUI.Position
+
+					MoveCon = RunService.PreRender:Connect(Drag)
+				end
+			end
+		end)
+
+		UserInputService.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				Holding = false
+			end
+		end)
+
+		TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play();
+		task.delay(0.6, function()
+			TweenService:Create(MainUI.Loading.LoadingContent.Bar, TweenInfo.new(1, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(1,0.05)}):Play();
+
+			task.delay(0.5, function()
+				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {Offset = Vector2.new(-0.32,0)}):Play();
+				task.wait(math.random(2, 4))
+				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {Offset = Vector2.new(0.1,0)}):Play();
+				task.wait(math.random(1, 3))
+				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(1.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0.6,0)}):Play();
+				
+				task.wait(1.5, function()
+					MainUI.Parent.Dependencies.Audios.Loaded:Play();
+					LoadedIn:Fire()
+				end)	
+			end)
+		end)		
+	end
+
 	function Management.newContent(ContentName : string)
 		local self = setmetatable({
 			ContentName = ContentName;
@@ -604,6 +679,24 @@ end;
 	end;
 
 	-- Window
+	function Methods.openWindow(self)
+		if self.Window.Parent.Visible == false then
+			if Tweenings.Fading ~= nil then
+				Tweenings.Fading:Pause();
+			end;
+			Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+			task.delay(0.5, function()
+				for i, v in pairs(MainHub.Contents) do
+					if v.Window ~= self.Window.Parent then
+						v.Window.Visible = false
+					end
+				end
+				Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 1}):Play();
+				self.Window.Parent.Visible = true;
+			end)
+		end
+		return self;
+	end;
 
 	function Methods.addWindowTitle(self, Title : string)
 		Syntax += 1;
