@@ -781,7 +781,9 @@ end;
 				end
 			end);
 
-			Data.Initialize(MainUnit)
+			if Data.Initialize then
+				Data.Initialize(MainUnit)
+			end
 		elseif UnitType == Enums.UnitType.String then
 			local newStringAction = Assets:WaitForChild("UnitString"):Clone();
 			newStringAction.Parent = self.Window;
@@ -819,7 +821,9 @@ end;
 				end;
 			end);
 
-			Data.Initialize(MainUnit)
+			if Data.Initialize then
+				Data.Initialize(MainUnit)
+			end
 		elseif UnitType == Enums.UnitType.Dropdown then
 			local newDropdownAction = Assets:WaitForChild("UnitDropdown"):Clone();
 			newDropdownAction.Parent = self.Window;
@@ -884,7 +888,9 @@ end;
 				end;
 			end);
 
-			Data.Initialize(MainUnit)
+			if Data.Initialize then
+				Data.Initialize(MainUnit)
+			end
 		elseif UnitType == Enums.UnitType.Slider then
 			local newSliderAction = Assets:WaitForChild("UnitSliderValue"):Clone();
 			newSliderAction.Parent = self.Window;
@@ -933,7 +939,9 @@ end;
 				end
 			end)
 
-			Data.Initialize(MainUnit)
+			if Data.Initialize then
+				Data.Initialize(MainUnit)
+			end
 		end;
 
 		return self;
