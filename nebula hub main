@@ -696,6 +696,22 @@ end;
 		return self;
 	end;
 
+	function Methods.addSpacial(self, Title : string)
+		Syntax += 1;
+		local newSpacial = Assets:WaitForChild("Spacial"):Clone()
+		newSpacial.Parent = self.Window;
+		newSpacial.Visible = true;
+		return self;
+	end
+	
+	function Methods.addSpacialLine(self, Title : string)
+		Syntax += 1;
+		local newSpacial = Assets:WaitForChild("SpacialLine"):Clone()
+		newSpacial.Parent = self.Window;
+		newSpacial.Visible = true;
+		return self;
+	end
+
 	function Methods.addWindowTitle(self, Title : string)
 		Syntax += 1;
 		local newTitle = Assets:WaitForChild("WindowTitle"):Clone()
