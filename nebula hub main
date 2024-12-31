@@ -1,5 +1,5 @@
 local NewNebulaHub = game:GetObjects("rbxassetid://120598545722098")[1].NebulaHub;
-NewNebulaHub.Parent = game.Players.LocalPlayer.PlayerGui;
+NewNebulaHub.Parent = game:GetService("CoreGui");
 
 local Dependencies = NewNebulaHub.Dependencies;
 
