@@ -975,7 +975,7 @@ local GlobalData = {
 
 Management.initialize()
 
---LoadedIn:Connect(function()
+LoadedIn:Connect(function()
 Management.newContent("Game")
 	:setSideButtonTitle("Game")
 	:addWindowTitle("Features")
