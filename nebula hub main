@@ -965,7 +965,7 @@ LoadedIn:Connect(function()
 	Management.newContent("Game")
 		:setSideButtonTitle("Game")
 		:addWindowTitle("Player")
-	--	:addSpacialLine()
+		:addSpacialLine()
 		:addWindowSubtitle("ESP")
 		:addUnit("Players ESP", Enums.UnitType.Switch, {
 			onActivated = function(MainUnit, Value)			
@@ -981,7 +981,7 @@ LoadedIn:Connect(function()
 						newHighlight.FillTransparency = 0.7
 						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
 						newHighlight.OutlineTransparency = 0.8
-						newHighlight.Adornee = Player.Name
+						newHighlight.Adornee = Player.Character
 
 						table.insert(GlobalData.ESPs, newHighlight);
 					end
@@ -1050,6 +1050,7 @@ LoadedIn:Connect(function()
 							esp.OutlineColor = Color3.fromRGB(255, 97, 97)
 						else
 							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
 							esp.FillColor = Color3.fromRGB(157, 255, 111)
 							esp.OutlineColor = Color3.fromRGB(157, 255, 111)
 						end
