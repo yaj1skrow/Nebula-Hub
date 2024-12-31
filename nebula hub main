@@ -963,8 +963,14 @@ end
 
 local GlobalData = {
 	ESPs = {};
+	GunESP = {};
+	TrapESP = {};
+	OriginalSheriff = nil;
 	PlayerRoles = nil;
-	Connections = {}
+	Connections = {};
+	PlayerWalkspeed = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed;
+	PlayerJumppower = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower;
+	ReloadESP = Signal.new();
 }
 
 Management.initialize()
