@@ -962,6 +962,7 @@ local GlobalData = {
 Management.initialize()
 
 LoadedIn:Connect(function()
+	LoadedIn:Connect(function()
 	Management.newContent("Game")
 		:setSideButtonTitle("Game")
 		:addWindowTitle("Player")
@@ -1081,10 +1082,22 @@ LoadedIn:Connect(function()
 				end;
 			end,
 			otherData = {
-
+				
 			},
 			defaultValue = false,
 			cooldown = 0.2,
+		})
+		:addUnit("Walkspeed", Enums.UnitType.Slider, {
+			Initialize = function(Unit)
+				Unit.OnValueChanged:Connect(function()
+					pcall(function()
+						game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed.Value = Unit.CurrentValue
+					end)
+				end)
+			end,
+			defaultValue = 16,
+			Min = 16,
+			Max = 30,
 		})
 
 	Management.setOpenedWindow("Home")
