@@ -1343,10 +1343,67 @@ LoadedIn:Connect(function()
 						CreateTrapESP(Child)
 					end
 				end)
+				
+				GlobalData.Connections["TrapESPRemove"] = workspace.DescendantRemoving:Connect(function(Child)
+					for i, v in pairs(GlobalData.TrapESP) do
+						v:Destroy()
+					end
+				end)
 			end,
 			onDeactivated = function(MainUnit, Value)
 				if GlobalData.Connections["TrapESP"] ~= nil then
 					GlobalData.Connections["TrapESP"]:Disconnect();
+				end
+
+				for i, v in pairs(GlobalData.TrapESP) do
+					v:Destroy()
+				end
+			end,
+			otherData = {
+
+			},
+			defaultValue = false,
+			cooldown = 0.2,
+		})
+		:addUnit("Coins", Enums.UnitType.Switch, {
+			onActivated = function(MainUnit, Value)
+				local function CreateCoinESP()
+					for i, v in pairs(GlobalData.CoinsESP) do
+						v:Destroy()
+					end
+
+					for i, location in pairs(workspace:GetDescendants()) do
+						if location.Name == "CoinVisual" then
+							local newHighlight = Instance.new("Highlight", Storage)
+							newHighlight.Name = "Trap"
+							newHighlight.FillColor = Color3.fromRGB(180, 170, 29)
+							newHighlight.FillTransparency = 0.35
+							newHighlight.OutlineColor = Color3.fromRGB(180, 170, 29)
+							newHighlight.OutlineTransparency = 0.4
+							newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+
+							newHighlight.Adornee = location
+						end
+					end
+				end
+
+				CreateCoinESP()
+				
+				GlobalData.Connections["CoinESP"] = workspace.DescendantAdded:Connect(function(Child)
+					CreateCoinESP()
+				end)
+				
+				GlobalData.Connections["CoinESPRemove"] = workspace.DescendantRemoving:Connect(function(Child)
+					CreateCoinESP()
+				end)
+			end,
+			onDeactivated = function(MainUnit, Value)
+				if GlobalData.Connections["CoinESP"] ~= nil then
+					GlobalData.Connections["CoinESP"]:Disconnect();
+				end
+				
+				if GlobalData.Connections["CoinESPRemove"] ~= nil then
+					GlobalData.Connections["CoinESPRemove"]:Disconnect();
 				end
 
 				for i, v in pairs(GlobalData.TrapESP) do
