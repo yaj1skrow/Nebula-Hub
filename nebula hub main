@@ -978,10 +978,10 @@ LoadedIn:Connect(function()
 						local newHighlight = Instance.new("Highlight", Storage)
 						newHighlight.Name = Player.Name
 						newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
-						newHighlight.FillTransparency = 0.7
+						newHighlight.FillTransparency = 0.5
 						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
-						newHighlight.OutlineTransparency = 0.8
-						newHighlight.Adornee = Player.Character
+						newHighlight.OutlineTransparency = 0.6
+						newHighlight.Adornee = Player.Name
 
 						table.insert(GlobalData.ESPs, newHighlight);
 					end
@@ -1050,7 +1050,6 @@ LoadedIn:Connect(function()
 							esp.OutlineColor = Color3.fromRGB(255, 97, 97)
 						else
 							local esp = Storage:FindFirstChild(player.Name)
-							esp.Adornee = player.Character
 							esp.FillColor = Color3.fromRGB(157, 255, 111)
 							esp.OutlineColor = Color3.fromRGB(157, 255, 111)
 						end
@@ -1063,9 +1062,23 @@ LoadedIn:Connect(function()
 				end)
 
 				loadEsp()
+				
+				GlobalData.Connections["PlayerAdd"] = game:GetService("Players").PlayerAdded:Connect(function()
+					loadEsp()
+				end)
+				
+				GlobalData.Connections["PlayerRemove"] = game:GetService("Players").PlayerRemoving:Connect(function()
+					loadEsp()
+				end)
 			end,
 			onDeactivated = function(MainUnit, Value)
+				GlobalData.Connections["HookRoles"]:Disconnect();
+				GlobalData.Connections["PlayerAdd"]:Disconnect();
+				GlobalData.Connections["PlayerRemove"]:Disconnect();
 
+				for i, esp in pairs(GlobalData.ESPs) do
+					esp:Destroy();
+				end;
 			end,
 			otherData = {
 
