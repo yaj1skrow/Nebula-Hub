@@ -1071,13 +1071,13 @@ LoadedIn:Connect(function()
 
 				loadEsp()
 				
-				GlobalData.Connections["PlayerAdd"] = game:GetService("Players").PlayerAdded:Connect(function()
-					loadEsp()
-				end)
+				--GlobalData.Connections["PlayerAdd"] = game:GetService("Players").PlayerAdded:Connect(function()
+				--	loadEsp()
+				--end)
 				
-				GlobalData.Connections["PlayerRemove"] = game:GetService("Players").PlayerRemoving:Connect(function()
-					loadEsp()
-				end)
+				--GlobalData.Connections["PlayerRemove"] = game:GetService("Players").PlayerRemoving:Connect(function()
+				--	loadEsp()
+				--end)
 			end,
 			onDeactivated = function(MainUnit, Value)
 				GlobalData.Connections["HookRoles"]:Disconnect();
@@ -1094,19 +1094,19 @@ LoadedIn:Connect(function()
 			defaultValue = false,
 			cooldown = 0.2,
 		})
-		:addUnit("Walkspeed", Enums.UnitType.Slider, {
-			Initialize = function(Unit)
-				Unit.OnValueChanged:Connect(function(Value)
-					pcall(function()
-						game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Value
-					end)
-				end)
-			end,
-			defaultValue = 16,
-			Min = 16,
-			Max = 30,
-			Increment = 1,
-		})
+		--:addUnit("Walkspeed", Enums.UnitType.Slider, {
+		--	Initialize = function(Unit)
+		--		Unit.OnValueChanged:Connect(function(Value)
+		--			pcall(function()
+		--				game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Value
+		--			end)
+		--		end)
+		--	end,
+		--	defaultValue = 16,
+		--	Min = 16,
+		--	Max = 30,
+		--	Increment = 1,
+		--})
 
 	Management.setOpenedWindow("Home")
 end)
