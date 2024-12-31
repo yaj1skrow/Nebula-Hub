@@ -982,7 +982,6 @@ LoadedIn:Connect(function()
 						newHighlight.FillTransparency = 0.5
 						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
 						newHighlight.OutlineTransparency = 0.6
-						newHighlight.Adornee = Player.Name
 
 						table.insert(GlobalData.ESPs, newHighlight);
 					end
