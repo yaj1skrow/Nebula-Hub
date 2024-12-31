@@ -1011,8 +1011,102 @@ local GlobalData = {
 
 Management.initialize()
 
+local function findSheriff()
+	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+		if player then
+			if player:FindFirstChild("Backpack") then
+				if player.Backpack:FindFirstChild("Gun") then
+					return player
+				end
+			end
+		end
+	end
+
+	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+		if player then
+			if player.Character then
+				if player:FindFirstChild("HumanoidRootPart") then
+					if player.Character:FindFirstChild("Gun") then
+						return player
+					end
+				end
+			end
+		end
+	end
+
+	if GlobalData.PlayerRoles then
+		for player, data in GlobalData.PlayerRoles do
+			if data.Role == "Sheriff" then
+				if game:GetService("Players"):FindFirstChild(player) then
+					if game:GetService("Players"):FindFirstChild(player).Character then
+						return game:GetService("Players"):FindFirstChild(player)
+					end
+				end
+			end
+		end
+	end
+end
+
+local function findHero()
+	if GlobalData.PlayerRoles then
+		for player, data in GlobalData.PlayerRoles do
+			if data.Role == "Hero" then
+				if game:GetService("Players"):FindFirstChild(player) then
+					if game:GetService("Players"):FindFirstChild(player).Character then
+						return game:GetService("Players"):FindFirstChild(player)
+					end
+				end
+			end
+		end
+	end
+end
+
+local function findMurderer()
+	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+		if player then
+			if player:FindFirstChild("Backpack") then
+				if player.Backpack:FindFirstChild("Knife") then
+					return player
+				end
+			end
+		end
+	end
+
+	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+		if player then
+			if player.Character then
+				if player:FindFirstChild("HumanoidRootPart") then
+					if player.Character:FindFirstChild("Knife") then
+						return player
+					end
+				end
+			end
+		end
+	end
+
+	if GlobalData.PlayerRoles then
+		for player, data in GlobalData.PlayerRoles do
+			if data.Role == "Murderer" then
+				if game:GetService("Players"):FindFirstChild(player) then
+					if game:GetService("Players"):FindFirstChild(player).Character then
+						return game:GetService("Players"):FindFirstChild(player)
+					end
+				end
+			end
+		end
+	end
+end
+
+if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
+	GlobalData.Connections["HookRoles"] = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
+		GlobalData.PlayerRoles = RoleData
+		GlobalData.ReloadESP:Fire()		
+		GlobalData.OriginalSheriff = findSheriff();		
+	end)
+end
+
 LoadedIn:Connect(function()
-	Management.newContent("Game")
+Management.newContent("Game")
 	:setSideButtonTitle("Game")
 	:addWindowTitle("Features")
 	:addSpacialLine()
@@ -1034,54 +1128,6 @@ LoadedIn:Connect(function()
 					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
 					table.insert(GlobalData.ESPs, newHighlight);
-				end
-			end
-
-			local function findSheriff()
-				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
-					if player.Backpack:FindFirstChild("Gun") then
-						return player
-					end
-				end
-
-				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
-					if player.Character:FindFirstChild("Gun") then
-						return player
-					end
-				end
-
-				if GlobalData.PlayerRoles then
-					for player, data in GlobalData.PlayerRoles do
-						if data.Role == "Sheriff" then
-							if game:GetService("Players"):FindFirstChild(player) then
-								return game:GetService("Players"):FindFirstChild(player)
-							end
-						end
-					end
-				end
-			end
-
-			local function findMurderer()
-				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
-					if player.Backpack:FindFirstChild("Knife") then
-						return player
-					end
-				end
-
-				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
-					if player.Character:FindFirstChild("Knife") then
-						return player
-					end
-				end
-
-				if GlobalData.PlayerRoles then
-					for player, data in GlobalData.PlayerRoles do
-						if data.Role == "Murderer" then
-							if game:GetService("Players"):FindFirstChild(player) then
-								return game:GetService("Players"):FindFirstChild(player)
-							end
-						end
-					end
 				end
 			end
 
@@ -1112,6 +1158,11 @@ LoadedIn:Connect(function()
 						esp.Adornee = player.Character
 						esp.FillColor = Color3.fromRGB(255, 97, 97)
 						esp.OutlineColor = Color3.fromRGB(255, 97, 97)
+					elseif Player == findHero() then
+						local esp = Storage:FindFirstChild(player.Name)
+						esp.Adornee = player.Character
+						esp.FillColor = Color3.fromRGB(255, 237, 98)
+						esp.OutlineColor = Color3.fromRGB(255, 237, 98)
 					else
 						local esp = Storage:FindFirstChild(player.Name)
 						esp.Adornee = player.Character
@@ -1121,13 +1172,6 @@ LoadedIn:Connect(function()
 				end
 			end
 
-			if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
-				GlobalData.Connections["HookRoles"] = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
-					GlobalData.PlayerRoles = RoleData
-					loadEsp()				
-				end)
-			end
-			
 			GlobalData.Connections["Reset"] = game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Died:Connect(function()
 				loadEsp()
 			end)
@@ -1137,7 +1181,7 @@ LoadedIn:Connect(function()
 			GlobalData.Connections["PlayerAdd"] = game:GetService("Players").PlayerAdded:Connect(function()
 				loadEsp()
 			end)
-			
+
 			GlobalData.Connections["ReceiveReload"] = GlobalData.ReloadESP:Connect(function()
 				loadEsp()
 			end)
@@ -1149,9 +1193,6 @@ LoadedIn:Connect(function()
 		onDeactivated = function(MainUnit, Value)
 			if GlobalData.Connections["Reset"] ~= nil then
 				GlobalData.Connections["Reset"]:Disconnect();
-			end
-			if GlobalData.Connections["HookRoles"] ~= nil then
-				GlobalData.Connections["HookRoles"]:Disconnect();
 			end
 			if GlobalData.Connections["PlayerRemove"] ~= nil then
 				GlobalData.Connections["PlayerRemove"]:Disconnect();
@@ -1183,12 +1224,12 @@ LoadedIn:Connect(function()
 					end)
 				end
 			end
-			
+
 			local function CreateNewGunESP(location)
 				for i, v in pairs(GlobalData.GunESP) do
 					v:Destroy()
 				end
-				
+
 				local newHighlight = Instance.new("Highlight", Storage)
 				newHighlight.Name = "GunDrop"
 				newHighlight.FillColor = Color3.fromRGB(188, 133, 255)
@@ -1196,22 +1237,22 @@ LoadedIn:Connect(function()
 				newHighlight.OutlineColor = Color3.fromRGB(188, 133, 255)
 				newHighlight.OutlineTransparency = 0.4
 				newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-				
+
 				newHighlight.Adornee = location
 			end
-			
+
 			for i, possibleGundrop in pairs(workspace:GetDescendants()) do
 				if possibleGundrop.Name == "GunDrop" then
 					CreateNewGunESP(possibleGundrop)
 				end
 			end
-			
+
 			GlobalData.Connections["GunESP"] = workspace.DescendantAdded:Connect(function(Child)
 				if Child.Name == "GunDrop" then
 					CreateNewGunESP(Child)
 				end
 			end)
-			
+
 			GlobalData.Connections["GunRemoval"] = workspace.DescendantRemoving:Connect(function(Child)
 				if Child.Name == "GunDrop" then
 					if GlobalData.GunGetting == true then
@@ -1224,7 +1265,7 @@ LoadedIn:Connect(function()
 			if GlobalData.Connections["GunESP"] ~= nil then
 				GlobalData.Connections["GunESP"]:Disconnect();
 			end
-			
+
 			for i, v in pairs(GlobalData.GunESP) do
 				v:Destroy()
 			end
@@ -1252,13 +1293,13 @@ LoadedIn:Connect(function()
 
 				newHighlight.Adornee = location
 			end
-			
+
 			for i, possibleTrap in pairs(workspace:GetDescendants()) do
 				if possibleTrap.Name == "Trap" then
 					CreateTrapESP(possibleTrap)
 				end
 			end
-			
+
 			GlobalData.Connections["TrapESP"] = workspace.DescendantAdded:Connect(function(Child)
 				if Child.Name == "Trap" then
 					CreateTrapESP(Child)
@@ -1383,19 +1424,19 @@ LoadedIn:Connect(function()
 	})
 	:addUnit("Fling", Enums.UnitType.Toggle, {
 		onActivated = function(MainUnit, Value)
-			local function miniFling(playerToFling)
-				local a=game.Players.LocalPlayer;local b=a:GetMouse()local c={playerToFling}local d=game:GetService("Players")local e=d.LocalPlayer;local f=false;local g=function(h)local i=e.Character or e.CharacterAdded:Wait();local j=i and i:FindFirstChildOfClass("Humanoid")local k=j and j.RootPart;local l=h.Character;local m;local n;local o;local p;local q;if l:FindFirstChildOfClass("Humanoid")then m=l:FindFirstChildOfClass("Humanoid")end;if m and m.RootPart then n=m.RootPart end;if l:FindFirstChild("Head")then o=l.Head end;if l:FindFirstChildOfClass("Accessory")then p=l:FindFirstChildOfClass("Accessory")end;if p and p:FindFirstChild("Handle")then q=p.Handle end;if i and j and k then if k.Velocity.Magnitude<50 then getgenv().OldPos=k.CFrame end;if m and m.Sit and not f then end;if o then if o.Velocity.Magnitude>500 then print("warn here: flung") end elseif not o and q then if q.Velocity.Magnitude>500 then print("warn here: flung already") end end;if o then workspace.CurrentCamera.CameraSubject=o elseif not o and q then workspace.CurrentCamera.CameraSubject=q elseif m and n then workspace.CurrentCamera.CameraSubject=m end;if not l:FindFirstChildWhichIsA("BasePart")then return end;local r=function(s,t,u)k.CFrame=CFrame.new(s.Position)*t*u;i:SetPrimaryPartCFrame(CFrame.new(s.Position)*t*u)k.Velocity=Vector3.new(9e7,9e7*10,9e7)k.RotVelocity=Vector3.new(9e8,9e8,9e8)end;local v=function(s)local w=2;local x=tick()local y=0;repeat if k and m then if s.Velocity.Magnitude<50 then y=y+100;r(s,CFrame.new(0,1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(2.25,1.5,-2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(-2.25,-1.5,2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()else r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-m.WalkSpeed),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-n.Velocity.Magnitude/1.25),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(-90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()end else break end until s.Velocity.Magnitude>500 or s.Parent~=h.Character or h.Parent~=d or h.Character~=l or m.Sit or j.Health<=0 or tick()>x+w end;workspace.FallenPartsDestroyHeight=0/0;local z=Instance.new("BodyVelocity")z.Name="Bozo"z.Parent=k;z.Velocity=Vector3.new(9e8,9e8,9e8)z.MaxForce=Vector3.new(1/0,1/0,1/0)j:SetStateEnabled(Enum.HumanoidStateType.Seated,false)if n and o then if(n.CFrame.p-o.CFrame.p).Magnitude>5 then v(o)else v(n)end elseif n and not o then v(n)elseif not n and o then v(o)elseif not n and not o and p and q then v(q)else print("warn here no valid fling body part target") end;z:Destroy()j:SetStateEnabled(Enum.HumanoidStateType.Seated,true)workspace.CurrentCamera.CameraSubject=j;repeat k.CFrame=getgenv().OldPos*CFrame.new(0,.5,0)i:SetPrimaryPartCFrame(getgenv().OldPos*CFrame.new(0,.5,0))j:ChangeState("GettingUp")table.foreach(i:GetChildren(),function(A,B)if B:IsA("BasePart")then B.Velocity,B.RotVelocity=Vector3.new(),Vector3.new()end end)task.wait()until(k.Position-getgenv().OldPos.p).Magnitude<25;workspace.FallenPartsDestroyHeight=getgenv().FPDH else print("warn here: player is not found, mightve died?") end end;g(c[1])
-			end
+			--local function miniFling(playerToFling)
+			--	local a=game.Players.LocalPlayer;local b=a:GetMouse()local c={playerToFling}local d=game:GetService("Players")local e=d.LocalPlayer;local f=false;local g=function(h)local i=e.Character or e.CharacterAdded:Wait();local j=i and i:FindFirstChildOfClass("Humanoid")local k=j and j.RootPart;local l=h.Character;local m;local n;local o;local p;local q;if l:FindFirstChildOfClass("Humanoid")then m=l:FindFirstChildOfClass("Humanoid")end;if m and m.RootPart then n=m.RootPart end;if l:FindFirstChild("Head")then o=l.Head end;if l:FindFirstChildOfClass("Accessory")then p=l:FindFirstChildOfClass("Accessory")end;if p and p:FindFirstChild("Handle")then q=p.Handle end;if i and j and k then if k.Velocity.Magnitude<50 then getgenv().OldPos=k.CFrame end;if m and m.Sit and not f then end;if o then if o.Velocity.Magnitude>500 then print("warn here: flung") end elseif not o and q then if q.Velocity.Magnitude>500 then print("warn here: flung already") end end;if o then workspace.CurrentCamera.CameraSubject=o elseif not o and q then workspace.CurrentCamera.CameraSubject=q elseif m and n then workspace.CurrentCamera.CameraSubject=m end;if not l:FindFirstChildWhichIsA("BasePart")then return end;local r=function(s,t,u)k.CFrame=CFrame.new(s.Position)*t*u;i:SetPrimaryPartCFrame(CFrame.new(s.Position)*t*u)k.Velocity=Vector3.new(9e7,9e7*10,9e7)k.RotVelocity=Vector3.new(9e8,9e8,9e8)end;local v=function(s)local w=2;local x=tick()local y=0;repeat if k and m then if s.Velocity.Magnitude<50 then y=y+100;r(s,CFrame.new(0,1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(2.25,1.5,-2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(-2.25,-1.5,2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()else r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-m.WalkSpeed),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-n.Velocity.Magnitude/1.25),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(-90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()end else break end until s.Velocity.Magnitude>500 or s.Parent~=h.Character or h.Parent~=d or h.Character~=l or m.Sit or j.Health<=0 or tick()>x+w end;workspace.FallenPartsDestroyHeight=0/0;local z=Instance.new("BodyVelocity")z.Name="Bozo"z.Parent=k;z.Velocity=Vector3.new(9e8,9e8,9e8)z.MaxForce=Vector3.new(1/0,1/0,1/0)j:SetStateEnabled(Enum.HumanoidStateType.Seated,false)if n and o then if(n.CFrame.p-o.CFrame.p).Magnitude>5 then v(o)else v(n)end elseif n and not o then v(n)elseif not n and o then v(o)elseif not n and not o and p and q then v(q)else print("warn here no valid fling body part target") end;z:Destroy()j:SetStateEnabled(Enum.HumanoidStateType.Seated,true)workspace.CurrentCamera.CameraSubject=j;repeat k.CFrame=getgenv().OldPos*CFrame.new(0,.5,0)i:SetPrimaryPartCFrame(getgenv().OldPos*CFrame.new(0,.5,0))j:ChangeState("GettingUp")table.foreach(i:GetChildren(),function(A,B)if B:IsA("BasePart")then B.Velocity,B.RotVelocity=Vector3.new(),Vector3.new()end end)task.wait()until(k.Position-getgenv().OldPos.p).Magnitude<25;workspace.FallenPartsDestroyHeight=getgenv().FPDH else print("warn here: player is not found, mightve died?") end end;g(c[1])
+			--end
 
-			miniFling(GlobalData.FlingTarget)
+			--miniFling(GlobalData.FlingTarget)
 		end,
 		cooldown = 0.2,
 		otherData = {
 
 		},
 	})
-		
-	Management.setOpenedWindow("Home")
+
+Management.setOpenedWindow("Home")
 end)
 
 Dependencies.Parent.Name = InitializeStringRandomizer(7)
