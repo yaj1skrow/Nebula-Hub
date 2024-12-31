@@ -1088,9 +1088,9 @@ LoadedIn:Connect(function()
 		})
 		:addUnit("Walkspeed", Enums.UnitType.Slider, {
 			Initialize = function(Unit)
-				Unit.OnValueChanged:Connect(function()
+				Unit.OnValueChanged:Connect(function(Value)
 					pcall(function()
-						game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed.Value = Unit.CurrentValue
+						game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed = Value
 					end)
 				end)
 			end,
