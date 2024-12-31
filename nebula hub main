@@ -1097,6 +1097,7 @@ LoadedIn:Connect(function()
 			defaultValue = 16,
 			Min = 16,
 			Max = 30,
+			Increment = 1,
 		})
 
 	Management.setOpenedWindow("Home")
