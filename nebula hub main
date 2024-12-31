@@ -975,8 +975,8 @@ local GlobalData = {
 
 Management.initialize()
 
-LoadedIn:Connect(function()
-	Management.newContent("Game")
+--LoadedIn:Connect(function()
+Management.newContent("Game")
 	:setSideButtonTitle("Game")
 	:addWindowTitle("Features")
 	:addSpacialLine()
@@ -1091,6 +1091,10 @@ LoadedIn:Connect(function()
 					loadEsp()				
 				end)
 			end
+			
+			GlobalData.Connections["Reset"] = game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Died:Connect(function()
+				loadEsp()
+			end)
 
 			loadEsp()
 
@@ -1107,6 +1111,9 @@ LoadedIn:Connect(function()
 			end)
 		end,
 		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["Reset"] ~= nil then
+				GlobalData.Connections["Reset"]:Disconnect();
+			end
 			if GlobalData.Connections["HookRoles"] ~= nil then
 				GlobalData.Connections["HookRoles"]:Disconnect();
 			end
