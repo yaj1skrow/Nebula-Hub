@@ -1039,6 +1039,7 @@ end
 local GlobalData = {
 	ESPs = {};
 	GunESP = {};
+	CoinsESP = {};
 	TrapESP = {};
 	OriginalSheriff = nil;
 	PlayerRoles = nil;
