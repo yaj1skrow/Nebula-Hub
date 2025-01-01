@@ -29,38 +29,18 @@ function Connection:Disconnect()
 	self.Connected = false;
 end
 
-table.freeze(Connection);
-
-export type Connection = typeof(Connection.new(function() end));
-
-export type SignalPrototype<T...> = {
-	__index : SignalPrototype<T...>;
-	Fire : (self : Signal<T...>, T...) -> ();
-	Wait : (self : Signal<T...>) -> T...;
-	Once : (self : Signal<T...>, func: (T...) -> ()) -> Connection;
-	Connect : (self : Signal<T...>, func: (T...) -> ()) -> Connection;
-	ConnectParallel : (self : Signal<T...>, func: (T...) -> ()) -> Connection;
-}
-
-export type Signal<T... = ()> = typeof(
-	setmetatable(
-		{destroyed=(nil::any)::boolean; connections={}::{Connection}; parallel_connections={}::{Connection}},
-		{}::SignalPrototype<T...>
-	)
-);
-
 local Signal = {};
 Signal.__index = Signal;
 
-function Signal.new<T...>() : Signal<T...>
+function Signal.new()
 	return setmetatable({
 		destroyed = false;
 		connections = {}::{Connection};
-		parallel_connections = {}::{Connection};
+		parallel_connections = {};
 	}, Signal);
 end
 
-function Signal:Connect<T...>(func: (T...) -> ())
+function Signal:Connect(func)
 	if (self.destroyed) then
 		error("[Signal] Cannot connect signal while destroyed", 2);
 	end
@@ -71,7 +51,7 @@ function Signal:Connect<T...>(func: (T...) -> ())
 	return connection;
 end
 
-function Signal:ConnectParallel<T...>(func: (T...) -> ())
+function Signal:ConnectParallel(func)
 	if (self.destroyed) then
 		error("[Signal] Cannot connect signal while destroyed", 2);
 	end
@@ -82,7 +62,7 @@ function Signal:ConnectParallel<T...>(func: (T...) -> ())
 	return connection;
 end
 
-function Signal:Fire<T...>(...) : ()
+function Signal:Fire(...)
 	if (self.destroyed) then
 		error("[Signal] Cannot call signal while destroyed", 2);
 	end
@@ -115,7 +95,7 @@ function Signal:Fire<T...>(...) : ()
 	end
 end
 
-function Signal:Wait<T...>() : T...
+function Signal:Wait().
 	local thread = coroutine.running();
 	self:Once(function(...)
 		coroutine.resume(thread, ...);
@@ -123,7 +103,7 @@ function Signal:Wait<T...>() : T...
 	return coroutine.yield();
 end
 
-function Signal:Once<T...>(func: (T...) -> ()) : Connection
+function Signal:Once(func)
 	local connection;
 	connection = self:Connect(function(... : T...)
 		if (connection and connection.Connected) then
@@ -134,7 +114,7 @@ function Signal:Once<T...>(func: (T...) -> ()) : Connection
 	return connection;
 end
 
-function Signal:Clone<T...>() : Signal<T...>
+function Signal:Clone()
 	if (self.destroyed) then
 		error("[Signal] Cannot clone signal while destroyed", 2);
 	end
@@ -154,15 +134,15 @@ local UserInputService = game:GetService("UserInputService")
 
 local SliderFuncs = {}
 
-function SliderFuncs.snapToScale(val: number, step: number): number
+function SliderFuncs.snapToScale(val, step)
 	return math.clamp(math.round(val / step) * step, 0, 1)
 end
 
-function lerp(start: number, finish: number, percent: number): number
+function lerp(start, finish, percent)
 	return (1 - percent) * start + percent * finish
 end
 
-function SliderFuncs.map(value: number, start: number, stop: number, newStart: number, newEnd: number, constrain: boolean): number
+function SliderFuncs.map(value, start, stop, newStart, newEnd, constrain)
 	local newVal = lerp(newStart, newEnd, SliderFuncs.getAlphaBetween(start, stop, value))
 	if not constrain then
 		return newVal
@@ -175,7 +155,7 @@ function SliderFuncs.map(value: number, start: number, stop: number, newStart: n
 	return math.max(math.min(newVal, newStart), newEnd)
 end
 
-function SliderFuncs.getNewPosition(self): UDim2
+function SliderFuncs.getNewPosition(self)
 	local absoluteSize = self._data.Button.AbsoluteSize[self._config.Axis]
 	local holderSize = self._holder.AbsoluteSize[self._config.Axis]
 
@@ -198,7 +178,7 @@ function SliderFuncs.getScaleIncrement(self)
 	return 1 / ((self._config.SliderData.End - self._config.SliderData.Start) / self._config.SliderData.Increment)
 end
 
-function SliderFuncs.getAlphaBetween(a: number, b: number, c: number): number
+function SliderFuncs.getAlphaBetween(a, b, c)
 	return (c - a) / (b - a)
 end
 
@@ -226,17 +206,8 @@ Slider.__index = function(object, indexed)
 
 	return Slider[indexed]
 end
-
-export type configDictionary = {
-	SliderData: {Start: number, End: number, Increment: number, DefaultValue: number | nil},
-	MoveType: "Tween" | "Instant" | nil,
-	MoveInfo: TweenInfo | nil,
-	Axis: string | nil,
-	Padding: number | nil,
-	AllowBackgroundClick: boolean
-}
-
-function Slider.new(holder: GuiBase2d, config: configDictionary)
+	
+function Slider.new(holder, config)
 	assert(pcall(function()
 		return holder.AbsoluteSize, holder.AbsolutePosition
 	end), "Holder argument does not have an AbsoluteSize/AbsolutePosition")
@@ -428,7 +399,7 @@ function Slider:Reset()
 	self:Move()
 end
 
-function Slider:OverrideValue(newValue: number)
+function Slider:OverrideValue(newValue)
 	self.IsHeld = false
 	self._data._percent = SliderFuncs.getAlphaBetween(self._config.SliderData.Start, self._config.SliderData.End, newValue)
 	self._data._percent = math.clamp(self._data._percent, 0, 1)
@@ -436,7 +407,7 @@ function Slider:OverrideValue(newValue: number)
 	self:Move()
 end
 
-function Slider:Move(override: string)
+function Slider:Move(override)
 	self._data._value = SliderFuncs.getNewValue(self)
 
 	local moveType = if override ~= nil then override else self._config.MoveType
@@ -454,7 +425,7 @@ function Slider:Move(override: string)
 	self.Changed:Fire(self._data._value)
 end
 
-function Slider:OverrideIncrement(newIncrement: number)
+function Slider:OverrideIncrement(newIncrement)
 	self._config.SliderData.Increment = newIncrement
 	self._data._increment = newIncrement
 	self._data._scaleIncrement = SliderFuncs.getScaleIncrement(self)
@@ -681,7 +652,7 @@ local LoadedIn = Signal.new()
 		end)		
 	end
 
-	function Management.newContent(ContentName : string)
+	function Management.newContent(ContentName)
 		local self = setmetatable({
 			ContentName = ContentName;
 		}, Methods);
@@ -731,7 +702,7 @@ local LoadedIn = Signal.new()
 		return self;
 	end;
 
-	function Management.setOpenedWindow(ContentName : string)
+	function Management.setOpenedWindow(ContentName)
 		if MainHub.Contents[ContentName] ~= nil then
 			if MainHub.Contents[ContentName].Window.Visible == false then
 				if Tweenings.Fading ~= nil then
@@ -751,7 +722,7 @@ local LoadedIn = Signal.new()
 		end;
 	end
 
-	function Management.notice(self, NoticeType, LifeTime, Content_, Header : Optional)
+	function Management.notice(self, NoticeType, LifeTime, Content_, Header)
 		if NoticeType == Enums.NoticeType.Notice then
 			local noticeClosed = false
 
@@ -888,7 +859,7 @@ end;
 --[[ Methods ]] do
 
 	-- Side Button
-	function Methods.setSideButtonTitle(self, SideTitle : string)
+	function Methods.setSideButtonTitle(self, SideTitle)
 		self.SideButton.ButtonTitle.Text = SideTitle;
 		return self;
 	end;
@@ -918,7 +889,7 @@ end;
 		return self;
 	end;
 
-	function Methods.addWindowTitle(self, Title : string)
+	function Methods.addWindowTitle(self, Title)
 		Syntax += 1;
 		local newTitle = Assets:WaitForChild("WindowTitle"):Clone()
 		newTitle.Parent = self.Window;
@@ -956,7 +927,7 @@ end;
 		return self;
 	end
 
-	function Methods.addUnit(self, UnitName, UnitType, Data : {any})
+	function Methods.addUnit(self, UnitName, UnitType, Data})
 		Syntax += 1
 		if UnitType == Enums.UnitType.Switch then
 			local newSwitchAction = Assets:WaitForChild("UnitSwitch"):Clone();
