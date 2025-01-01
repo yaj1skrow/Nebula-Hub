@@ -601,7 +601,7 @@ local LoadedIn = Signal.new()
 
 --[[ Creator ]] do
 	function Management.initialize()
-		TweenService:Create(MainUI.Stroke.UIGradient, TweenInfo.new(1.2, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,0.5)}):Play()
+		TweenService:Create(MainUI.Stroke.UIGradient, TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Offset = Vector2.new(0,0.5)}):Play()
 		task.delay(1.2, function()
 			TweenService:Create(MainUI, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {GroupTransparency = 0}):Play()
 			TweenService:Create(MainUI, TweenInfo.new(2, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(0.25, 0.05)}):Play()
@@ -667,10 +667,10 @@ local LoadedIn = Signal.new()
 					MainUI.Topbar.Actions.Minimize.Activator.Activated:Connect(function()
 						if isMinimized == false then
 							isMinimized = true
-							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 18}):Play();
+							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 18}):Play();
 						else
 							isMinimized = false
-							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play();
+							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 1.5}):Play();
 						end
 					end)
 
@@ -1054,14 +1054,14 @@ end;
 			newDropdownAction.Visible = true;
 			newDropdownAction.LayoutOrder = Syntax;
 			newDropdownAction.UnitTitle.Text = UnitName
-			
+
 			Syntax += 1
 			local newSpatialDropper = Assets:WaitForChild("Spacial"):Clone()
 			newSpatialDropper.Parent = self.Window
 			newSpatialDropper.Visible = true;
 			newSpatialDropper.Size = UDim2.fromScale(0.95,0)
 			newSpatialDropper.LayoutOrder = Syntax;
-			
+
 			newDropdownAction:WaitForChild("Action"):WaitForChild("DropdownInt"):WaitForChild("Container"):WaitForChild("DropdownMenu")
 
 			local CreatedEnums = {};
@@ -1078,15 +1078,17 @@ end;
 				OnValueChanged = Signal.new();
 				SelectionUIs = {}
 			};
-			
+
 			local MainUnit = Units[UnitName];
-			
+
 			if Data.setDefault then
 				Data.setDefault(function(Value)
 					MainUnit.Selected = CreatedEnums[Value]
 					MainUnit.OnValueChanged:Fire(CreatedEnums[Value])
 					newDropdownAction.Action.MainDropdown.SelectedPreview.Text = CreatedEnums[Value].Name;
-					newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = CreatedEnums[Value].Color;
+					if CreatedEnums[Value].Color ~= nil then
+						newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = CreatedEnums[Value].Color;
+					end			
 				end)
 			end
 			MainUnit.Connections["DropConnects"] = {}
@@ -1107,9 +1109,9 @@ end;
 							newDropEnum.DropdownTitle.TextColor3 = v.Color;
 							newDropEnum.Parent = newDropdownAction.Action.DropdownInt.Container.DropdownMenu;
 							newDropEnum.Visible = true;
-							
+
 							table.insert(MainUnit.SelectionUIs, newDropEnum)
-							
+
 							MainUnit.Connections["DropConnects"]["DropdownSelect"..v.Name] = newDropEnum.Activator.Activated:Connect(function()
 								if MainUnit.Selected ~= nil then
 									if MainUnit.Selected.Value ~= v.Value then
@@ -1121,7 +1123,9 @@ end;
 								MainUnit.Selected = CreatedEnums[v.Name];
 
 								newDropdownAction.Action.MainDropdown.SelectedPreview.Text = v.Name;
-								newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = v.Color;
+								if v.Color ~= nil then
+									newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = v.Color;
+								end
 							end);
 						end;
 						newDropdownAction.Action.DropdownInt.Container.Visible = true;
@@ -1191,8 +1195,10 @@ end;
 						local success, number = pcall(tonumber, newSliderAction.Action.MainString.TextBox.Text)
 
 						if success then
-							NewSliderSystem:OverrideValue(number)
-							MainUnit.OnValueChanged:Fire(number);
+							pcall(function()
+								NewSliderSystem:OverrideValue(number)
+								MainUnit.OnValueChanged:Fire(NewSliderSystem:GetValue());
+							end)
 						end
 					end
 				end
@@ -1378,7 +1384,7 @@ function private.fling(TargetPlayer)
 	local Character = Player.Character
 	local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
 	local RootPart = Humanoid and Humanoid.RootPart
-	
+
 	local data = {}
 
 	local TCharacter = TargetPlayer.Character
@@ -1408,10 +1414,10 @@ function private.fling(TargetPlayer)
 		if RootPart.Velocity.Magnitude < 50 then
 			data.OldPos = RootPart.CFrame
 		end
-		
+
 		if THumanoid and THumanoid.Sit then
 		end
-		
+
 		if THead then
 			if THead.Velocity.Magnitude > 500 then
 				Management:notice(Enums.NoticeType.Alert, 3,"Player is already flinged", "ERROR")
@@ -1561,7 +1567,7 @@ if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
 	end)
 end
 
---LoadedIn:Connect(function()
+LoadedIn:Connect(function()
 Management:notice(Enums.NoticeType.Notice, 3,"Welcome to Nebula Hub!", "WELCOME")
 
 Management.newContent("Game")
@@ -2021,7 +2027,7 @@ Management.newContent("Game")
 				local FindGun = private.getMap():FindFirstChild("GunDrop")
 				local GunFetchedSuccess = false
 				local CancelGunFetch = false
-				
+
 				if FindGun then
 					local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
 					local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
@@ -2130,7 +2136,7 @@ Management.newContent("Game")
 	:addWindowTitle("Trolling")
 	:addSpacialLine()
 	:addWindowSubtitle("Fling")
-	:addUnit("Target", Enums.UnitType.Dropdown, {
+	:addUnit("Fling Target", Enums.UnitType.Dropdown, {
 		Initialize = function(Unit)
 			Unit.OnValueChanged:Connect(function(Player)
 				if game.Players:FindFirstChild(Player.Name) then
@@ -2146,6 +2152,7 @@ Management.newContent("Game")
 						CurrentDrops[v.Name] = {
 							Name = v.Name;
 							Value = i - 1;
+							Color = v == private.findHero() and Color3.fromRGB(255, 237, 98) or v == private.findSheriff() and Color3.fromRGB(105, 125, 255) or v == private.findMurderer() and Color3.fromRGB(255, 97, 97) or Color3.fromRGB(255, 255, 255)
 						}
 					end
 				end
@@ -2153,6 +2160,10 @@ Management.newContent("Game")
 			end
 
 			refresh()
+			
+			GlobalData["PlayerRolesChanging"] = GlobalData.ReloadESP:Connect(function()
+				refresh()
+			end)
 
 			GlobalData["PlayerRemovingTargetEnum1"] = game:GetService("Players").PlayerRemoving:Connect(function()
 				refresh()
@@ -2174,8 +2185,12 @@ Management.newContent("Game")
 			--	local a=game.Players.LocalPlayer;local b=a:GetMouse()local c={playerToFling}local d=game:GetService("Players")local e=d.LocalPlayer;local f=false;local g=function(h)local i=e.Character or e.CharacterAdded:Wait();local j=i and i:FindFirstChildOfClass("Humanoid")local k=j and j.RootPart;local l=h.Character;local m;local n;local o;local p;local q;if l:FindFirstChildOfClass("Humanoid")then m=l:FindFirstChildOfClass("Humanoid")end;if m and m.RootPart then n=m.RootPart end;if l:FindFirstChild("Head")then o=l.Head end;if l:FindFirstChildOfClass("Accessory")then p=l:FindFirstChildOfClass("Accessory")end;if p and p:FindFirstChild("Handle")then q=p.Handle end;if i and j and k then if k.Velocity.Magnitude<50 then getgenv().OldPos=k.CFrame end;if m and m.Sit and not f then end;if o then if o.Velocity.Magnitude>500 then print("warn here: flung") end elseif not o and q then if q.Velocity.Magnitude>500 then print("warn here: flung already") end end;if o then workspace.CurrentCamera.CameraSubject=o elseif not o and q then workspace.CurrentCamera.CameraSubject=q elseif m and n then workspace.CurrentCamera.CameraSubject=m end;if not l:FindFirstChildWhichIsA("BasePart")then return end;local r=function(s,t,u)k.CFrame=CFrame.new(s.Position)*t*u;i:SetPrimaryPartCFrame(CFrame.new(s.Position)*t*u)k.Velocity=Vector3.new(9e7,9e7*10,9e7)k.RotVelocity=Vector3.new(9e8,9e8,9e8)end;local v=function(s)local w=2;local x=tick()local y=0;repeat if k and m then if s.Velocity.Magnitude<50 then y=y+100;r(s,CFrame.new(0,1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(2.25,1.5,-2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(-2.25,-1.5,2.25)+m.MoveDirection*s.Velocity.Magnitude/1.25,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()r(s,CFrame.new(0,-1.5,0)+m.MoveDirection,CFrame.Angles(math.rad(y),0,0))task.wait()else r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-m.WalkSpeed),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,m.WalkSpeed),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,-n.Velocity.Magnitude/1.25),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,1.5,n.Velocity.Magnitude/1.25),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(math.rad(-90),0,0))task.wait()r(s,CFrame.new(0,-1.5,0),CFrame.Angles(0,0,0))task.wait()end else break end until s.Velocity.Magnitude>500 or s.Parent~=h.Character or h.Parent~=d or h.Character~=l or m.Sit or j.Health<=0 or tick()>x+w end;workspace.FallenPartsDestroyHeight=0/0;local z=Instance.new("BodyVelocity")z.Name="Bozo"z.Parent=k;z.Velocity=Vector3.new(9e8,9e8,9e8)z.MaxForce=Vector3.new(1/0,1/0,1/0)j:SetStateEnabled(Enum.HumanoidStateType.Seated,false)if n and o then if(n.CFrame.p-o.CFrame.p).Magnitude>5 then v(o)else v(n)end elseif n and not o then v(n)elseif not n and o then v(o)elseif not n and not o and p and q then v(q)else print("warn here no valid fling body part target") end;z:Destroy()j:SetStateEnabled(Enum.HumanoidStateType.Seated,true)workspace.CurrentCamera.CameraSubject=j;repeat k.CFrame=getgenv().OldPos*CFrame.new(0,.5,0)i:SetPrimaryPartCFrame(getgenv().OldPos*CFrame.new(0,.5,0))j:ChangeState("GettingUp")table.foreach(i:GetChildren(),function(A,B)if B:IsA("BasePart")then B.Velocity,B.RotVelocity=Vector3.new(),Vector3.new()end end)task.wait()until(k.Position-getgenv().OldPos.p).Magnitude<25;workspace.FallenPartsDestroyHeight=getgenv().FPDH else print("warn here: player is not found, mightve died?") end end;g(c[1])
 			--end
 
-			--miniFling(GlobalData.FlingTarget)
-			private.fling(GlobalData.FlingTarget)
+			--miniFling(GlobalData.FlingTarget)		
+			if GlobalData.FlingTarget ~= nil then
+				if GlobalData.FlingTarget.Character then
+					private.fling(GlobalData.FlingTarget)
+				end
+			end
 		end,
 		cooldown = 0.2,
 		otherData = {
@@ -2206,6 +2221,6 @@ Management.newContent("Game")
 	:addSpacial()
 
 Management.setOpenedWindow("Home")
---end)
+end)
 
 Dependencies.Parent.Name = InitializeStringRandomizer(7)
