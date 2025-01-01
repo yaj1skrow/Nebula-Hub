@@ -959,7 +959,7 @@ end;
 		return self;
 	end
 
-		function Methods.addUnit(self, UnitName, UnitType, Data : {any})
+	function Methods.addUnit(self, UnitName, UnitType, Data : {any})
 		Syntax += 1
 		if UnitType == Enums.UnitType.Switch then
 			local newSwitchAction = Assets:WaitForChild("UnitSwitch"):Clone();
@@ -967,9 +967,7 @@ end;
 			newSwitchAction.Visible = true;
 			newSwitchAction.LayoutOrder = Syntax;
 			newSwitchAction.UnitTitle.Text = UnitName
-			
-			local FirstRun = true
-			
+
 			newSwitchAction:WaitForChild("Action"):WaitForChild("MainSwitch"):WaitForChild("SwitchButtonView")
 
 			Units[UnitName] = {
@@ -986,16 +984,12 @@ end;
 				if MainUnit.TurnedOn == false then
 					MainUnit.TurnedOn = true;
 
-					if FirstRun == false then
-						Data.onDeactivated(MainUnit, false);
-					end
+					Data.onDeactivated(MainUnit, false);
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(50, 64, 126), Position = UDim2.fromScale(0.2,0.5)}):Play()
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView.Up, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(101, 129, 255)}):Play()
 				else
 					MainUnit.TurnedOn = false;
-					
-					FirstRun = true
-					
+
 					Data.onActivated(MainUnit, true);
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(62, 111, 58), Position = UDim2.fromScale(0.8,0.5)}):Play()
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView.Up, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(142, 255, 134)}):Play()
