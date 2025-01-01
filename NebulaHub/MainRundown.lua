@@ -7,6 +7,7 @@ end
 task.wait(2)
 
 local NewNebulaHub = Instance.new("ScreenGui", game:GetService("CoreGui"))
+NewNebulaHub.ScreenInsets = Enum.ScreenInsets.None
 
 local NewInterface = game:GetObjects("rbxassetid://133070117920687")[1]
 for _, Interface in pairs(NewInterface:GetChildren()) do
@@ -539,15 +540,33 @@ Management.Enums = {
 		};
 		["Dropdown"] = {
 			["Value"] = 1;
-			["Name"] = "Dropdown";
+			["Name"] = "Switch";
 		};
 		["Slider"] = {
 			["Value"] = 2;
-			["Name"] = "Slider";
+			["Name"] = "Switch";
 		};
 		["String"] = {
 			["Value"] = 3;
-			["Name"] = "String";
+			["Name"] = "Switch";
+		};
+		["Toggle"] = {
+			["Value"] = 4;
+			["Name"] = "Toggle";
+		};
+	};
+	["NoticeType"] = {
+		["Notice"] = {
+			["Value"] = 0;
+			["Name"] = "Notice";
+		};
+		["Alert"] = {
+			["Value"] = 1;
+			["Name"] = "Alert";
+		};
+		["Notification"] = {
+			["Value"] = 2;
+			["Name"] = "Notification";
 		};
 	};
 };
@@ -1783,4 +1802,4 @@ LoadedIn:Connect(function()
 	Management.setOpenedWindow("Home")
 end)
 
-Dependencies.Parent.Name = InitializeStringRandomizer(7)
+NewNebulaHub.Name = InitializeStringRandomizer(7)
