@@ -6,8 +6,15 @@ end
 
 task.wait(2)
 
-local NewNebulaHub = game:GetObjects("rbxassetid://100888927577713")[1].NebulaHub;
-NewNebulaHub.Parent = game:GetService("CoreGui");
+local NewNebulaHub = Instance.new("ScreenGui", game:GetService("CoreGui"))
+
+local NewInterface = game:GetObjects("rbxassetid://133070117920687")[1]
+for _, Interface in pairs(NewInterface:GetChildren()) do
+	Interface.Parent = NewNebulaHub
+end
+
+local NewDependencies = game:GetObjects("rbxassetid://92864161055774")[1].Dependencies;
+NewDependencies.Parent = NewNebulaHub;
 
 local Dependencies = NewNebulaHub.Dependencies;
 
