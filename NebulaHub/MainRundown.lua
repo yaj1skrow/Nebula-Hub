@@ -607,7 +607,7 @@ local LoadedIn = Signal.new()
 			TweenService:Create(MainUI, TweenInfo.new(2, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(0.25, 0.05)}):Play()
 			TweenService:Create(MainUI.Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 		end)
-		
+
 		MainUI.Parent.Dependencies.Audios.Opening:Play();
 
 		local function makeDraggable()
@@ -645,9 +645,9 @@ local LoadedIn = Signal.new()
 				end
 			end)
 		end
-		
+
 		task.wait(2.5)
-		
+
 		TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play();
 		task.delay(0.6, function()
 			TweenService:Create(MainUI.Loading.LoadingContent.Bar, TweenInfo.new(1, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(1,0.05)}):Play();
@@ -663,7 +663,7 @@ local LoadedIn = Signal.new()
 					makeDraggable()
 					MainUI.Parent.Dependencies.Audios.Loaded:Play();
 					LoadedIn:Fire()
-					
+
 					MainUI.Topbar.Actions.Minimize.Activator.Activated:Connect(function()
 						if isMinimized == false then
 							isMinimized = true
@@ -673,7 +673,7 @@ local LoadedIn = Signal.new()
 							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play();
 						end
 					end)
-					
+
 					task.wait(0.3)
 					TweenService:Create(MainUI.Loading, TweenInfo.new(1, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play();
 				end)	
@@ -750,7 +750,7 @@ local LoadedIn = Signal.new()
 			end
 		end;
 	end
-	
+
 	function Management.notice(self, NoticeType, LifeTime, Content_, Header : Optional)
 		if NoticeType == Enums.NoticeType.Notice then
 			local noticeClosed = false
@@ -762,28 +762,27 @@ local LoadedIn = Signal.new()
 			local newNotice = Assets:WaitForChild("NoticeTemplate"):Clone();
 			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
 			newNotice.Visible = true
-			newNotice.Main.Sizer.AspectRatio = 600
 			newNotice.Main.SmallNotice.Content.AlertContent.Text = Content_;
-			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			newNotice.Main.Position = UDim2.fromScale(1.6,1)
 			if Header ~= nil then
 				newNotice.Main.SmallNotice.Topbar.Title.Text = Header;
 			end
-			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
-			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2.5}):Play()
-			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2.5}):Play()
+			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.SmallNotice.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
-				noticeClosed = true
-				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				task.delay(1.2, function()
-					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
-				end)
-				game:GetService("Debris"):AddItem(newNotice, 3.6)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(1.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
 			end)
 
-			task.delay(3, function()
+			task.delay(.6, function()
 				TweenService:Create(newNotice.Main.SmallNotice.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
 				task.wait(LifeTime)
 				if noticeClosed == false then
@@ -806,28 +805,27 @@ local LoadedIn = Signal.new()
 			local newNotice = Assets:WaitForChild("AlertTemplate"):Clone();
 			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
 			newNotice.Visible = true
-			newNotice.Main.Sizer.AspectRatio = 600
 			newNotice.Main.Alert.Content.AlertContent.Text = Content_;
-			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			newNotice.Main.Position = UDim2.fromScale(1.6,1)
 			if Header ~= nil then
 				newNotice.Main.Alert.Topbar.Title.Text = Header;
 			end
-			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
-			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
-			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.Alert.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
-				noticeClosed = true
-				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				task.delay(1.2, function()
-					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
-				end)
-				game:GetService("Debris"):AddItem(newNotice, 3.6)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(1.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
 			end)
 
-			task.delay(3, function()
+			task.delay(.6, function()
 				TweenService:Create(newNotice.Main.Alert.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
 				task.wait(LifeTime)
 				if noticeClosed == false then
@@ -850,28 +848,27 @@ local LoadedIn = Signal.new()
 			local newNotice = Assets:WaitForChild("NotificationTemplate"):Clone();
 			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
 			newNotice.Visible = true
-			newNotice.Main.Sizer.AspectRatio = 600
 			newNotice.Main.Notification.Content.AlertContent.Text = Content_;
-			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			newNotice.Main.Position = UDim2.fromScale(1.6,1)
 			if Header ~= nil then
 				newNotice.Main.Notification.Topbar.Title.Text = Header;
 			end
-			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
-			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
-			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.Notification.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
-				noticeClosed = true
-				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-				task.delay(1.2, function()
-					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
-				end)
-				game:GetService("Debris"):AddItem(newNotice, 3.6)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(1.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
 			end)
 
-			task.delay(3, function()
+			task.delay(.6, function()
 				TweenService:Create(newNotice.Main.Notification.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
 				task.wait(LifeTime)
 				if noticeClosed == false then
@@ -887,7 +884,7 @@ local LoadedIn = Signal.new()
 		end
 	end
 end;
-		
+
 --[[ Methods ]] do
 
 	-- Side Button
@@ -921,6 +918,16 @@ end;
 		return self;
 	end;
 
+	function Methods.addWindowTitle(self, Title : string)
+		Syntax += 1;
+		local newTitle = Assets:WaitForChild("WindowTitle"):Clone()
+		newTitle.Parent = self.Window;
+		newTitle.Text = Title;
+		newTitle.LayoutOrder = Syntax;
+		newTitle.Visible = true;
+		return self;
+	end
+
 	function Methods.addSpacial(self)
 		Syntax += 1;
 		local newSpacial = Assets:WaitForChild("Spacial"):Clone()
@@ -939,21 +946,11 @@ end;
 		return self;
 	end
 
-	function Methods.addWindowTitle(self, Title : string)
-		Syntax += 1;
-		local newTitle = Assets:WaitForChild("WindowTitle"):Clone()
-		newTitle.Parent = self.Window;
-		newTitle.Text = Title;
-		newTitle.LayoutOrder = Syntax;
-		newTitle.Visible = true;
-		return self;
-	end
-
 	function Methods.addWindowSubtitle(self, Subtitle : string)
 		Syntax += 1;
 		local newTitle = Assets:WaitForChild("Subtitle"):Clone()
 		newTitle.Parent = self.Window;
-		newTitle.Text = Subtitle;
+		newTitle.Text = Subtitle..":";
 		newTitle.LayoutOrder = Syntax;
 		newTitle.Visible = true;
 		return self;
@@ -1057,7 +1054,14 @@ end;
 			newDropdownAction.Visible = true;
 			newDropdownAction.LayoutOrder = Syntax;
 			newDropdownAction.UnitTitle.Text = UnitName
-
+			
+			Syntax += 1
+			local newSpatialDropper = Assets:WaitForChild("Spacial"):Clone()
+			newSpatialDropper.Parent = self.Window
+			newSpatialDropper.Visible = true;
+			newSpatialDropper.Size = UDim2.fromScale(0.95,0)
+			newSpatialDropper.LayoutOrder = Syntax;
+			
 			newDropdownAction:WaitForChild("Action"):WaitForChild("DropdownInt"):WaitForChild("Container"):WaitForChild("DropdownMenu")
 
 			local CreatedEnums = {};
@@ -1072,46 +1076,74 @@ end;
 				DropdownOpen = false;
 				Debounce = false;
 				OnValueChanged = Signal.new();
+				SelectionUIs = {}
 			};
-
+			
 			local MainUnit = Units[UnitName];
-
-			for i, v in pairs(CreatedEnums) do
-				local newDropEnum = Assets:WaitForChild("DropdownOption"):Clone();
-				newDropEnum.DropdownTitle.Text = v.Name;
-				newDropEnum.Parent = newDropdownAction.Action.DropdownInt.Container.DropdownMenu;
-				newDropEnum.Visible = true;
-
-				MainUnit.Connections["DropdownSelect"..v.Name] = newDropEnum.Activator.Activated:Connect(function()
-					if MainUnit.Selected ~= nil then
-						if MainUnit.Selected.Value ~= v.Value then
-							MainUnit.OnValueChanged:Fire(CreatedEnums[v.Name])
-						end
-					else
-						MainUnit.OnValueChanged:Fire(CreatedEnums[v.Name])
-					end
-					MainUnit.Selected = CreatedEnums[v.Name];
-
-					newDropdownAction.Action.MainDropdown.SelectedPreview.Text = v.Name;
-				end);
-			end;
+			
+			if Data.setDefault then
+				Data.setDefault(function(Value)
+					MainUnit.Selected = CreatedEnums[Value]
+					MainUnit.OnValueChanged:Fire(CreatedEnums[Value])
+					newDropdownAction.Action.MainDropdown.SelectedPreview.Text = CreatedEnums[Value].Name;
+					newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = CreatedEnums[Value].Color;
+				end)
+			end
+			MainUnit.Connections["DropConnects"] = {}
 
 			MainUnit.Connections["OpenedDropdown"] = newDropdownAction.Action.Activator.Activated:Connect(function()
 				if MainUnit.Debounce == false then
+					MainUnit.Debounce = true;
 					if MainUnit.DropdownOpen == false then
 						MainUnit.DropdownOpen = true
+						for i, v in pairs(MainUnit.SelectionUIs) do
+							if v ~= nil then
+								v:Destroy()
+							end
+						end
+						for i, v in pairs(CreatedEnums) do
+							local newDropEnum = Assets:WaitForChild("DropdownOption"):Clone();
+							newDropEnum.DropdownTitle.Text = v.Name;
+							newDropEnum.DropdownTitle.TextColor3 = v.Color;
+							newDropEnum.Parent = newDropdownAction.Action.DropdownInt.Container.DropdownMenu;
+							newDropEnum.Visible = true;
+							
+							table.insert(MainUnit.SelectionUIs, newDropEnum)
+							
+							MainUnit.Connections["DropConnects"]["DropdownSelect"..v.Name] = newDropEnum.Activator.Activated:Connect(function()
+								if MainUnit.Selected ~= nil then
+									if MainUnit.Selected.Value ~= v.Value then
+										MainUnit.OnValueChanged:Fire(CreatedEnums[v.Name])
+									end
+								else
+									MainUnit.OnValueChanged:Fire(CreatedEnums[v.Name])
+								end
+								MainUnit.Selected = CreatedEnums[v.Name];
+
+								newDropdownAction.Action.MainDropdown.SelectedPreview.Text = v.Name;
+								newDropdownAction.Action.MainDropdown.SelectedPreview.TextColor3 = v.Color;
+							end);
+						end;
 						newDropdownAction.Action.DropdownInt.Container.Visible = true;
-						TweenService:Create(newDropdownAction.Action.DropdownInt.Container.Slider, TweenInfo.new(.7, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,1)}):Play();
+						TweenService:Create(newDropdownAction.Action.DropdownInt.Container.Slider, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,1)}):Play();
+						TweenService:Create(newSpatialDropper, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(0.95, 0.15)}):Play();
 					else
+						for i, v in pairs(MainUnit.Connections["DropConnects"]) do
+							if v ~= nil then
+								v:Disconnect()
+								v = nil
+							end
+						end
 						MainUnit.DropdownOpen = false;
-						TweenService:Create(newDropdownAction.Action.DropdownInt.Container.Slider, TweenInfo.new(.7, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,-1)}):Play();
-						task.delay(.7, function()
+						TweenService:Create(newDropdownAction.Action.DropdownInt.Container.Slider, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,-1)}):Play();
+						TweenService:Create(newSpatialDropper, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(0.95, 0)}):Play();
+						task.delay(.3, function()
 							newDropdownAction.Action.DropdownInt.Container.Visible = false;
 						end);
 					end;
-					MainUnit.Debounce = true;
-					task.wait(0.3 + Data.cooldown);
-					MainUnit.Debounce = false;
+					task.delay(0.3 + Data.cooldown, function()
+						MainUnit.Debounce = false;
+					end)
 				end;
 			end);
 
@@ -1226,7 +1258,6 @@ end
 local GlobalData = {
 	ESPs = {};
 	GunESP = {};
-	CoinsESP = {};
 	TrapESP = {};
 	OriginalSheriff = nil;
 	PlayerRoles = nil;
@@ -1234,12 +1265,17 @@ local GlobalData = {
 	PlayerWalkspeed = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed;
 	PlayerJumppower = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower;
 	ReloadESP = Signal.new();
+	ChamTypeChanged = Signal.new();
 	FlingTarget = nil;
+	CoinsESP = {};
+	ChamType = "Box"
 }
+
+local private = {}
 
 Management.initialize()
 
-local function findHero()
+function private.findHero()
 	if GlobalData.PlayerRoles then
 		for player, data in GlobalData.PlayerRoles do
 			if data.Role == "Hero" then
@@ -1253,10 +1289,10 @@ local function findHero()
 	end
 end
 
-local function findSheriff()
+function private.findSheriff()
 	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
 		if player then
-			if player ~= findHero() then
+			if player ~= private.findHero() then
 				if player:FindFirstChild("Backpack") then
 					if player.Backpack:FindFirstChild("Gun") then
 						return player
@@ -1268,7 +1304,7 @@ local function findSheriff()
 
 	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
 		if player then
-			if player ~= findHero() then
+			if player ~= private.findHero() then
 				if player.Character then
 					if player:FindFirstChild("HumanoidRootPart") then
 						if player.Character:FindFirstChild("Gun") then
@@ -1293,7 +1329,7 @@ local function findSheriff()
 	end
 end
 
-local function findMurderer()
+function private.findMurderer()
 	for i, player in pairs(game:GetService("Players"):GetPlayers()) do
 		if player then
 			if player:FindFirstChild("Backpack") then
@@ -1329,17 +1365,206 @@ local function findMurderer()
 	end
 end
 
+function private.getMap()
+	for _, possibleMap in ipairs(workspace:GetChildren()) do
+		if possibleMap:FindFirstChild("CoinContainer") and possibleMap:FindFirstChild("Spawns") then
+			return possibleMap
+		end
+	end
+	return nil
+end
+
+function private.fling(TargetPlayer)
+	local Character = Player.Character
+	local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
+	local RootPart = Humanoid and Humanoid.RootPart
+	
+	local data = {}
+
+	local TCharacter = TargetPlayer.Character
+	local THumanoid
+	local TRootPart
+	local THead
+	local Accessory
+	local Handle
+
+	if TCharacter:FindFirstChildOfClass("Humanoid") then
+		THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
+	end
+	if THumanoid and THumanoid.RootPart then
+		TRootPart = THumanoid.RootPart
+	end
+	if TCharacter:FindFirstChild("Head") then
+		THead = TCharacter.Head
+	end
+	if TCharacter:FindFirstChildOfClass("Accessory") then
+		Accessory = TCharacter:FindFirstChildOfClass("Accessory")
+	end
+	if Accessory and Accessory:FindFirstChild("Handle") then
+		Handle = Accessory.Handle
+	end
+
+	if Character and Humanoid and RootPart then
+		if RootPart.Velocity.Magnitude < 50 then
+			data.OldPos = RootPart.CFrame
+		end
+		
+		if THumanoid and THumanoid.Sit then
+		end
+		
+		if THead then
+			if THead.Velocity.Magnitude > 500 then
+				Management:notice(Enums.NoticeType.Alert, 3,"Player is already flinged", "ERROR")
+				return
+			end
+		elseif not THead and Handle then
+			if Handle.Velocity.Magnitude > 500 then
+				Management:notice(Enums.NoticeType.Alert, 3,"Player is already flinged", "ERROR")
+				return
+			end
+		end
+
+		if THead then
+			workspace.CurrentCamera.CameraSubject = THead
+		elseif not THead and Handle then
+			workspace.CurrentCamera.CameraSubject = Handle
+		elseif THumanoid and TRootPart then
+			workspace.CurrentCamera.CameraSubject = THumanoid
+		end
+		if not TCharacter:FindFirstChildWhichIsA("BasePart") then
+			return
+		end
+
+		local FPos = function(BasePart, Pos, Ang)
+			RootPart.CFrame = CFrame.new(BasePart.Position) * Pos * Ang
+			Character:SetPrimaryPartCFrame(CFrame.new(BasePart.Position) * Pos * Ang)
+			RootPart.Velocity = Vector3.new(9e7, 9e7 * 10, 9e7)
+			RootPart.RotVelocity = Vector3.new(9e8, 9e8, 9e8)
+		end
+
+		local SFBasePart = function(BasePart)
+			local TimeToWait = 2
+			local Time = tick()
+			local Angle = 0
+
+			repeat
+				if RootPart and THumanoid then
+					if BasePart.Velocity.Magnitude < 50 then
+						Angle = Angle + 100
+
+						FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle),0 ,0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(2.25, 1.5, -2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(-2.25, -1.5, 2.25) + THumanoid.MoveDirection * BasePart.Velocity.Magnitude / 1.25, CFrame.Angles(math.rad(Angle), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, 1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, 0) + THumanoid.MoveDirection,CFrame.Angles(math.rad(Angle), 0, 0))
+						task.wait()
+					else
+						FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, -THumanoid.WalkSpeed), CFrame.Angles(0, 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, 1.5, THumanoid.WalkSpeed), CFrame.Angles(math.rad(90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, -TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(0, 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, 1.5, TRootPart.Velocity.Magnitude / 1.25), CFrame.Angles(math.rad(90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(math.rad(90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5 ,0), CFrame.Angles(math.rad(-90), 0, 0))
+						task.wait()
+
+						FPos(BasePart, CFrame.new(0, -1.5, 0), CFrame.Angles(0, 0, 0))
+						task.wait()
+					end
+				else
+					break
+				end
+			until BasePart.Velocity.Magnitude > 500 or BasePart.Parent ~= TargetPlayer.Character or TargetPlayer.Parent ~= game:GetService("Players") or TargetPlayer.Character ~= TCharacter or THumanoid.Sit or Humanoid.Health <= 0 or tick() > Time + TimeToWait
+		end
+
+		workspace.FallenPartsDestroyHeight = 0/0
+
+		local BV = Instance.new("BodyVelocity")
+		BV.Name = "EpixVel"
+		BV.Parent = RootPart
+		BV.Velocity = Vector3.new(9e8, 9e8, 9e8)
+		BV.MaxForce = Vector3.new(1/0, 1/0, 1/0)
+
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+
+		if TRootPart and THead then
+			if (TRootPart.CFrame.p - THead.CFrame.p).Magnitude > 5 then
+				SFBasePart(THead)
+			else
+				SFBasePart(TRootPart)
+			end
+		elseif TRootPart and not THead then
+			SFBasePart(TRootPart)
+		elseif not TRootPart and THead then
+			SFBasePart(THead)
+		elseif not TRootPart and not THead and Accessory and Handle then
+			SFBasePart(Handle)
+		else
+			Management:notice(Enums.NoticeType.Alert, 3,"Can't find a part from the player's character to fling.", "ERROR")
+		end
+
+		BV:Destroy()
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+		workspace.CurrentCamera.CameraSubject = Humanoid
+
+		repeat
+			RootPart.CFrame = data.OldPos * CFrame.new(0, .5, 0)
+			Character:SetPrimaryPartCFrame(data.OldPos * CFrame.new(0, .5, 0))
+			Humanoid:ChangeState("GettingUp")
+			for i, x in pairs(Character:GetChildren()) do
+				if x:IsA("BasePart") then
+					x.Velocity, x.RotVelocity = Vector3.new(), Vector3.new()
+				end
+			end
+			task.wait()
+		until (RootPart.Position - data.OldPos.p).Magnitude < 25
+		workspace.FallenPartsDestroyHeight = data.FPDH
+	else
+		Management:notice(Enums.NoticeType.Alert, 3,"Player might have died, target player has no character.", "ERROR")
+	end
+end
+
 if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
 	GlobalData.Connections["HookRoles"] = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
 		GlobalData.PlayerRoles = RoleData
 		GlobalData.ReloadESP:Fire()		
-		GlobalData.OriginalSheriff = findSheriff();		
+		GlobalData.OriginalSheriff = private.findSheriff();		
 	end)
 end
 
-LoadedIn:Connect(function()
-	Management:notice(Enums.NoticeType.Notice, 5,"Welcome to Nebula Hub!", "WELCOME")
-	Management.newContent("Game")
+--LoadedIn:Connect(function()
+Management:notice(Enums.NoticeType.Notice, 3,"Welcome to Nebula Hub!", "WELCOME")
+
+Management.newContent("Game")
 	:setSideButtonTitle("Game")
 	:addWindowTitle("Features")
 	:addSpacialLine()
@@ -1351,59 +1576,112 @@ LoadedIn:Connect(function()
 					esp:Destroy();
 				end;
 
-				for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
-					local newHighlight = Instance.new("Highlight", Storage)
-					newHighlight.Name = Player.Name
-					newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
-					newHighlight.FillTransparency = 0.35
-					newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
-					newHighlight.OutlineTransparency = 0.4
-					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				if GlobalData.ChamType == "Highlight" then
+					for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
+						local newHighlight = Instance.new("Highlight", Storage)
+						newHighlight.Name = Player.Name
+						newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
+						newHighlight.FillTransparency = 0.35
+						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
+						newHighlight.OutlineTransparency = 0.4
+						newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-					table.insert(GlobalData.ESPs, newHighlight);
+						table.insert(GlobalData.ESPs, newHighlight);
+					end
+				else
+					for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
+						local Character = Player.Character
+						if Character then
+							for i, bodyPart in pairs(Character:GetChildren()) do
+								if bodyPart:IsA("BasePart") then
+									for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+										local newChammer = _BoxCham:Clone()
+										newChammer.Parent = bodyPart
+										newChammer.Name = newChammer.Name..Player.Name
+										newChammer.PSE.BackgroundColor3 = Color3.fromRGB(157, 255, 111)
+										newChammer.Adornee = nil;
+
+										table.insert(GlobalData.ESPs, newChammer);
+									end
+								end
+							end
+						end
+					end
 				end
 			end
 
 			local function loadEsp()
 				InitializeESP()
-				for i, player in pairs(game:GetService("Players"):GetPlayers()) do
-					if player == findSheriff() then
-						if GlobalData.OriginalSheriff then
-							if player ~= GlobalData.OriginalSheriff then
-								local esp = Storage:FindFirstChild(player.Name)
-								esp.Adornee = player.Character
-								esp.FillColor = Color3.fromRGB(255, 237, 98)
-								esp.OutlineColor = Color3.fromRGB(255, 237, 98)
-							else
-								local esp = Storage:FindFirstChild(player.Name)
-								esp.Adornee = player.Character
-								esp.FillColor = Color3.fromRGB(105, 125, 255)
-								esp.OutlineColor = Color3.fromRGB(105, 125, 255)
-							end
-						else
+				if GlobalData.ChamType == "Highlight" then
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player == private.findSheriff() then
 							local esp = Storage:FindFirstChild(player.Name)
 							esp.Adornee = player.Character
 							esp.FillColor = Color3.fromRGB(105, 125, 255)
 							esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+						elseif player == private.findMurderer() then
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(255, 97, 97)
+							esp.OutlineColor = Color3.fromRGB(255, 97, 97)
+						elseif Player == private.findHero() then
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(255, 237, 98)
+							esp.OutlineColor = Color3.fromRGB(255, 237, 98)
+						else
+							local esp = Storage:FindFirstChild(player.Name)
+							esp.Adornee = player.Character
+							esp.FillColor = Color3.fromRGB(157, 255, 111)
+							esp.OutlineColor = Color3.fromRGB(157, 255, 111)
 						end
-					elseif player == findMurderer() then
-						local esp = Storage:FindFirstChild(player.Name)
-						esp.Adornee = player.Character
-						esp.FillColor = Color3.fromRGB(255, 97, 97)
-						esp.OutlineColor = Color3.fromRGB(255, 97, 97)
-					elseif Player == findHero() then
-						local esp = Storage:FindFirstChild(player.Name)
-						esp.Adornee = player.Character
-						esp.FillColor = Color3.fromRGB(255, 237, 98)
-						esp.OutlineColor = Color3.fromRGB(255, 237, 98)
-					else
-						local esp = Storage:FindFirstChild(player.Name)
-						esp.Adornee = player.Character
-						esp.FillColor = Color3.fromRGB(157, 255, 111)
-						esp.OutlineColor = Color3.fromRGB(157, 255, 111)
+					end
+				else
+					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
+						if player == private.findSheriff() then
+							if not player.Character then
+								return
+							end
+							for i, PSE in pairs(player.Character:GetDescendants()) do
+								if PSE:GetAttribute("ESP_BoxType") == true then
+									PSE.PSE.BackgroundColor3 = Color3.fromRGB(105, 125, 255)
+								end
+							end
+						elseif player == private.findMurderer() then
+							if not player.Character then
+								return
+							end
+							for i, PSE in pairs(player.Character:GetDescendants()) do
+								if PSE:GetAttribute("ESP_BoxType") == true then
+									PSE.PSE.BackgroundColor3 = Color3.fromRGB(255, 97, 97)
+								end
+							end
+						elseif Player == private.findHero() then
+							if not player.Character then
+								return
+							end
+							for i, PSE in pairs(player.Character:GetDescendants()) do
+								if PSE:GetAttribute("ESP_BoxType") == true then
+									PSE.PSE.BackgroundColor3 = Color3.fromRGB(255, 237, 98)
+								end
+							end
+						else
+							if not player.Character then
+								return
+							end
+							for i, PSE in pairs(player.Character:GetDescendants()) do
+								if PSE:GetAttribute("ESP_BoxType") == true then
+									PSE.PSE.BackgroundColor3 = Color3.fromRGB(157, 255, 111)
+								end
+							end
+						end
 					end
 				end
 			end
+
+			GlobalData.Connections["ChamChanged_player"] = GlobalData.ChamTypeChanged:Connect(function()
+				loadEsp()
+			end)
 
 			GlobalData.Connections["Reset"] = game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function()
 				loadEsp()
@@ -1427,6 +1705,9 @@ LoadedIn:Connect(function()
 			if GlobalData.Connections["Reset"] ~= nil then
 				GlobalData.Connections["Reset"]:Disconnect();
 			end
+			if GlobalData.Connections["ChamChanged_player"] ~= nil then
+				GlobalData.Connections["ChamChanged_player"]:Disconnect();
+			end
 			if GlobalData.Connections["PlayerRemove"] ~= nil then
 				GlobalData.Connections["PlayerRemove"]:Disconnect();
 			end				
@@ -1448,31 +1729,46 @@ LoadedIn:Connect(function()
 	})
 	:addUnit("Dropped Gun Cham", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)
-			local function TrackGunActions(GunDrop)
-				if GunDrop then
-					GunDrop.Touched:Connect(function(Hit)
-						if game.Players:GetPlayers(Hit.Parent) then
-							GlobalData["GunGetting"] = true
-						end
-					end)
-				end
-			end
+			--local function TrackGunActions(GunDrop)
+			--	if GunDrop then
+			--		GunDrop.Touched:Connect(function(Hit)
+			--			if game.Players:GetPlayers(Hit.Parent) then
+			--				GlobalData["GunGetting"] = true
+			--			end
+			--		end)
+			--	end
+			--end
 
 			local function CreateNewGunESP(location)
 				for i, v in pairs(GlobalData.GunESP) do
 					v:Destroy()
 				end
 
-				local newHighlight = Instance.new("Highlight", Storage)
-				newHighlight.Name = "GunDrop"
-				newHighlight.FillColor = Color3.fromRGB(188, 133, 255)
-				newHighlight.FillTransparency = 0.35
-				newHighlight.OutlineColor = Color3.fromRGB(188, 133, 255)
-				newHighlight.OutlineTransparency = 0.4
-				newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				if GlobalData.ChamType == "Highlight" then
+					local newHighlight = Instance.new("Highlight", Storage)
+					newHighlight.Name = "GunDrop"
+					newHighlight.FillColor = Color3.fromRGB(188, 133, 255)
+					newHighlight.FillTransparency = 0.35
+					newHighlight.OutlineColor = Color3.fromRGB(188, 133, 255)
+					newHighlight.OutlineTransparency = 0.4
+					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-				newHighlight.Adornee = location
-				table.insert(GlobalData.GunESP, newHighlight)
+					newHighlight.Adornee = location
+					table.insert(GlobalData.GunESP, newHighlight)
+				else
+					local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
+					newHighlight.Parent = Storage;
+					newHighlight.Size = Vector3.new(1.5, 1.5, 1.5)
+					newHighlight.Name = "GunDrop";
+					newHighlight.Position = location:IsA("BasePart") and location.Position or location:IsA("Model") and location:GetPivot().Position or location:IsA("Attachment") and location.WorldPosition;
+					for i, v in pairs(newHighlight:GetDescendants()) do
+						if v.Name == "PSE" then
+							v.BackgroundColor3 = Color3.fromRGB(188, 133, 255)
+						end
+					end
+
+					table.insert(GlobalData.GunESP, newHighlight)
+				end
 			end
 
 			for i, possibleGundrop in pairs(workspace:GetDescendants()) do
@@ -1480,6 +1776,14 @@ LoadedIn:Connect(function()
 					CreateNewGunESP(possibleGundrop)
 				end
 			end
+
+			GlobalData.Connections["ChamChanged_gun"] = GlobalData.ChamTypeChanged:Connect(function()
+				for i, possibleGundrop in pairs(workspace:GetDescendants()) do
+					if possibleGundrop.Name == "GunDrop" then
+						CreateNewGunESP(possibleGundrop)
+					end
+				end
+			end)
 
 			GlobalData.Connections["GunESP"] = workspace.DescendantAdded:Connect(function(Child)
 				if Child.Name == "GunDrop" then
@@ -1496,8 +1800,16 @@ LoadedIn:Connect(function()
 			end)
 		end,
 		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["ChamChanged_gun"] ~= nil then
+				GlobalData.Connections["ChamChanged_gun"]:Disconnect();
+			end
+
 			if GlobalData.Connections["GunESP"] ~= nil then
 				GlobalData.Connections["GunESP"]:Disconnect();
+			end
+
+			if GlobalData.Connections["GunRemoval"] ~= nil then
+				GlobalData.Connections["GunRemoval"]:Disconnect();
 			end
 
 			for i, v in pairs(GlobalData.GunESP) do
@@ -1517,16 +1829,31 @@ LoadedIn:Connect(function()
 					v:Destroy()
 				end
 
-				local newHighlight = Instance.new("Highlight", Storage)
-				newHighlight.Name = "Trap"
-				newHighlight.FillColor = Color3.fromRGB(180, 53, 83)
-				newHighlight.FillTransparency = 0.35
-				newHighlight.OutlineColor = Color3.fromRGB(180, 53, 83)
-				newHighlight.OutlineTransparency = 0.4
-				newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				if GlobalData.ChamType == "Highlight" then
+					local newHighlight = Instance.new("Highlight", Storage)
+					newHighlight.Name = "Trap"
+					newHighlight.FillColor = Color3.fromRGB(180, 53, 83)
+					newHighlight.FillTransparency = 0.35
+					newHighlight.OutlineColor = Color3.fromRGB(180, 53, 83)
+					newHighlight.OutlineTransparency = 0.4
+					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-				newHighlight.Adornee = location
-				table.insert(GlobalData.TrapESP, newHighlight)
+					newHighlight.Adornee = location
+					table.insert(GlobalData.TrapESP, newHighlight)
+				else
+					local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
+					newHighlight.Parent = Storage;
+					newHighlight.Name = "Trap";
+					newHighlight.Size = Vector3.new(2, 0.8, 2)
+					newHighlight.Position = location:IsA("BasePart") and location.Position or location:IsA("Model") and location:GetPivot().Position or location:IsA("Attachment") and location.WorldPosition;
+					for i, v in pairs(newHighlight:GetDescendants()) do
+						if v.Name == "PSE" then
+							v.BackgroundColor3 = Color3.fromRGB(180, 53, 83)
+						end
+					end
+
+					table.insert(GlobalData.TrapESP, newHighlight)
+				end
 			end
 
 			for i, possibleTrap in pairs(workspace:GetDescendants()) do
@@ -1534,6 +1861,14 @@ LoadedIn:Connect(function()
 					CreateTrapESP(possibleTrap)
 				end
 			end
+
+			GlobalData.Connections["ChamChanged_trap"] = GlobalData.ChamTypeChanged:Connect(function()
+				for i, possibleGundrop in pairs(workspace:GetDescendants()) do
+					if possibleGundrop.Name == "Trap" then
+						CreateTrapESP(possibleGundrop)
+					end
+				end
+			end)
 
 			GlobalData.Connections["TrapESP"] = workspace.DescendantAdded:Connect(function(Child)
 				if Child.Name == "Trap" then
@@ -1548,8 +1883,16 @@ LoadedIn:Connect(function()
 			end)
 		end,
 		onDeactivated = function(MainUnit, Value)
+			if GlobalData.Connections["ChamChanged_trap"] ~= nil then
+				GlobalData.Connections["ChamChanged_trap"]:Disconnect();
+			end
+
 			if GlobalData.Connections["TrapESP"] ~= nil then
 				GlobalData.Connections["TrapESP"]:Disconnect();
+			end
+
+			if GlobalData.Connections["TrapESPRemove"] ~= nil then
+				GlobalData.Connections["TrapESPRemove"]:Disconnect();
 			end
 
 			for i, v in pairs(GlobalData.TrapESP) do
@@ -1569,23 +1912,45 @@ LoadedIn:Connect(function()
 					v:Destroy()
 				end
 
-				for i, Coin in pairs(workspace:GetDescendants()) do
-					if Coin.Name == "CoinVisual" then
-						local newHighlight = Instance.new("Highlight", Storage)
-						newHighlight.Name = "Cham_C"
-						newHighlight.FillColor = Color3.fromRGB(180, 170, 29)
-						newHighlight.FillTransparency = 0.35
-						newHighlight.OutlineColor = Color3.fromRGB(180, 170, 29)
-						newHighlight.OutlineTransparency = 0.4
-						newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				if GlobalData.ChamType == "Highlight" then
+					for i, Coin in pairs(workspace:GetDescendants()) do
+						if Coin.Name == "CoinVisual" then
+							local newHighlight = Instance.new("Highlight", Storage)
+							newHighlight.Name = "CoinVisual"
+							newHighlight.FillColor = Color3.fromRGB(180, 170, 29)
+							newHighlight.FillTransparency = 0.35
+							newHighlight.OutlineColor = Color3.fromRGB(180, 170, 29)
+							newHighlight.OutlineTransparency = 0.4
+							newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-						newHighlight.Adornee = Coin
-						table.insert(GlobalData.CoinsESP, newHighlight)
+							newHighlight.Adornee = Coin
+							table.insert(GlobalData.CoinsESP, newHighlight)
+						end
+					end
+				else
+					for i, Coin in pairs(workspace:GetDescendants()) do
+						if Coin.Name == "CoinVisual" then
+							local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
+							newHighlight.Parent = Storage;
+							newHighlight.Name = "CoinVisual";
+							newHighlight.Position = Coin:IsA("BasePart") and Coin.Position or Coin:IsA("Model") and Coin:GetPivot().Position or Coin:IsA("Attachment") and Coin.WorldPosition;
+							for i, v in pairs(newHighlight:GetDescendants()) do
+								if v.Name == "PSE" then
+									v.BackgroundColor3 = Color3.fromRGB(180, 170, 29)
+								end
+							end
+
+							table.insert(GlobalData.CoinsESP, newHighlight)
+						end
 					end
 				end
 			end
 
 			CreateCoinESP()
+
+			GlobalData.Connections["ChamChanged_coins"] = GlobalData.ChamTypeChanged:Connect(function()
+				CreateCoinESP()
+			end)
 
 			GlobalData.Connections["CoinESP"] = workspace.DescendantAdded:Connect(function(Child)
 				CreateCoinESP()
@@ -1599,7 +1964,9 @@ LoadedIn:Connect(function()
 			if GlobalData.Connections["CoinESP"] ~= nil then
 				GlobalData.Connections["CoinESP"]:Disconnect();
 			end
-
+			if GlobalData.Connections["ChamChanged_coins"] ~= nil then
+				GlobalData.Connections["ChamChanged_coins"]:Disconnect();
+			end
 			if GlobalData.Connections["CoinESPRemove"] ~= nil then
 				GlobalData.Connections["CoinESPRemove"]:Disconnect();
 			end
@@ -1616,25 +1983,77 @@ LoadedIn:Connect(function()
 	})
 	:addUnit("ChamType", Enums.UnitType.Dropdown, {
 		Initialize = function(Unit)
-
+			print("?")
+			Unit.OnValueChanged:Connect(function(Value)
+				print("e?")
+				GlobalData.ChamType = Value.Name
+				GlobalData.ChamTypeChanged:Fire()
+			end)
 		end,
 		createEnums = function(Creator)
 			Creator({
 				["Highlight"] = {
 					Name = "Highlight";
-					Value = 0
+					Value = 0,
+					Color = Color3.fromRGB(201, 255, 178)
 				};
 				["Box"] = {
 					Name = "Box";
-					Value = 1
+					Value = 1,
+					Color = Color3.fromRGB(255, 234, 128)
 				}
 			})
+		end,
+		setDefault = function(Setter)
+			Setter("Box")
 		end,
 		cooldown = 0.2,
 		otherData = {
 
 		},
 
+	})
+	:addSpacial()
+	:addWindowSubtitle("Innocent")
+	:addUnit("Get Dropped Gun", Enums.UnitType.Toggle, {
+		onActivated = function()
+			if Character then
+				local FindGun = private.getMap():FindFirstChild("GunDrop")
+				local GunFetchedSuccess = false
+				local CancelGunFetch = false
+				
+				if FindGun then
+					local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
+					local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
+					Character:WaitForChild("HumanoidRootPart").Anchored = true;
+					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
+					Character:PivotTo(FindGun:GetPivot())
+					task.delay(3, function()
+						if GunFetchedSuccess == false then
+							CancelGunFetch = true
+						end
+					end)
+					Player.Backpack.ChildAdded:Connect(function(child)
+						if child:IsA("Tool") and child.Name == "Gun" then
+							GunFetchedSuccess = true
+						end
+					end)
+					repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
+					if CancelGunFetch then
+						Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
+					end
+					Character:PivotTo(KeptOriginalCFrame)
+					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
+					Character:WaitForChild("HumanoidRootPart").Anchored = false;
+				else
+					Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed.", "ERROR")
+				end
+			end
+		end,
+		cooldown = 0.2,
+		otherData = {
+
+		}
 	})
 	:addSpacial()
 	:addWindowSubtitle("Player")
@@ -1756,6 +2175,7 @@ LoadedIn:Connect(function()
 			--end
 
 			--miniFling(GlobalData.FlingTarget)
+			private.fling(GlobalData.FlingTarget)
 		end,
 		cooldown = 0.2,
 		otherData = {
@@ -1785,7 +2205,7 @@ LoadedIn:Connect(function()
 	})
 	:addSpacial()
 
-	Management.setOpenedWindow("Home")
-end)
+Management.setOpenedWindow("Home")
+--end)
 
-NewNebulaHub.Name = InitializeStringRandomizer(7)
+Dependencies.Parent.Name = InitializeStringRandomizer(7)
