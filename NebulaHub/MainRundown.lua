@@ -1771,7 +1771,7 @@ LoadedIn:Connect(function()
 		},
 		defaultValue = false
 	})
-	:addSpacial(_
+	:addSpacial()
 
 	Management.setOpenedWindow("Home")
 end)
