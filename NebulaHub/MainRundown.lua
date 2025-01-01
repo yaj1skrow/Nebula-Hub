@@ -6,7 +6,7 @@ end
 
 task.wait(2)
 
-local NewNebulaHub = game:GetObjects("rbxassetid://100888927577713")[1]
+local NewNebulaHub = game:GetObjects("rbxassetid://100888927577713")[1].NebulaHub
 NewNebulaHub.Parent = game:GetService("CoreGui")
 
 local Dependencies = NewNebulaHub.Dependencies;
