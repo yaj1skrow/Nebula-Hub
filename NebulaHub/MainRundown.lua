@@ -587,6 +587,7 @@ local LoadedIn = Signal.new()
 		task.delay(1.2, function()
 			TweenService:Create(MainUI, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {GroupTransparency = 0}):Play()
 			TweenService:Create(MainUI, TweenInfo.new(2, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(0.25, 0.05)}):Play()
+			TweenService:Create(MainUI.Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 		end)
 		
 		MainUI.Parent.Dependencies.Audios.Opening:Play();
@@ -680,11 +681,29 @@ local LoadedIn = Signal.new()
 		local newWindow = Assets:WaitForChild("WindowTemplate"):Clone();
 		newWindow.Parent = MainContents;
 		newWindow.Name = ContentName.."Window"
-		newWindow.Visible = true
+		newWindow.Visible = false
 
 		self.SideButton = newSideButton;
 		self.SelectionStroke = newSelectedStroke;
 		self.Window = newWindow.Window;
+
+		newSideButton.Activator.Activated:Connect(function()
+			if newWindow.Visible == false then
+				if Tweenings.Fading ~= nil then
+					Tweenings.Fading:Pause();
+				end;
+				Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+				task.delay(0.5, function()
+					Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 1}):Play();
+					for i, v in pairs(MainHub.Contents) do
+						if v.Window ~= newWindow then
+							v.Window.Visible = false
+						end
+					end
+					newWindow.Visible = true
+				end)
+			end
+		end)
 
 		MainHub.Contents[ContentName] = {
 			SideButton = newSideButton;
@@ -693,8 +712,164 @@ local LoadedIn = Signal.new()
 
 		return self;
 	end;
-end;
 
+	function Management.setOpenedWindow(ContentName : string)
+		if MainHub.Contents[ContentName] ~= nil then
+			if MainHub.Contents[ContentName].Window.Visible == false then
+				if Tweenings.Fading ~= nil then
+					Tweenings.Fading:Pause();
+				end;
+				Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+				task.delay(0.5, function()
+					for i, v in pairs(MainHub.Contents) do
+						if v.Window ~= MainHub.Contents[ContentName].Window then
+							v.Window.Visible = false
+						end
+					end
+					Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 1}):Play();
+					MainHub.Contents[ContentName].Window.Visible = true;
+				end)
+			end
+		end;
+	end
+	
+	function Management.notice(self, NoticeType, LifeTime, Content_, Header : Optional)
+		if NoticeType == Enums.NoticeType.Notice then
+			local noticeClosed = false
+
+			if LifeTime == nil then
+				LifeTime = 3
+			end
+
+			local newNotice = Assets:WaitForChild("NoticeTemplate"):Clone();
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Visible = true
+			newNotice.Main.Sizer.AspectRatio = 600
+			newNotice.Main.SmallNotice.Content.AlertContent.Text = Content_;
+			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			if Header ~= nil then
+				newNotice.Main.SmallNotice.Topbar.Title.Text = Header;
+			end
+			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2.5}):Play()
+			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2.5}):Play()
+
+			local newConnect = nil
+			newConnect = newNotice.Main.SmallNotice.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
+				noticeClosed = true
+				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				task.delay(1.2, function()
+					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+				end)
+				game:GetService("Debris"):AddItem(newNotice, 3.6)
+			end)
+
+			task.delay(3, function()
+				TweenService:Create(newNotice.Main.SmallNotice.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+				task.wait(LifeTime)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(2.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
+			end)
+		elseif NoticeType == Enums.NoticeType.Alert then
+			local noticeClosed = false
+
+			if LifeTime == nil then
+				LifeTime = 3
+			end
+
+			local newNotice = Assets:WaitForChild("AlertTemplate"):Clone();
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Visible = true
+			newNotice.Main.Sizer.AspectRatio = 600
+			newNotice.Main.Alert.Content.AlertContent.Text = Content_;
+			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			if Header ~= nil then
+				newNotice.Main.Alert.Topbar.Title.Text = Header;
+			end
+			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+
+			local newConnect = nil
+			newConnect = newNotice.Main.Alert.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
+				noticeClosed = true
+				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				task.delay(1.2, function()
+					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+				end)
+				game:GetService("Debris"):AddItem(newNotice, 3.6)
+			end)
+
+			task.delay(3, function()
+				TweenService:Create(newNotice.Main.Alert.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+				task.wait(LifeTime)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(2.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
+			end)
+		elseif NoticeType == Enums.NoticeType.Notification then
+			local noticeClosed = false
+
+			if LifeTime == nil then
+				LifeTime = 3
+			end
+
+			local newNotice = Assets:WaitForChild("NotificationTemplate"):Clone();
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Visible = true
+			newNotice.Main.Sizer.AspectRatio = 600
+			newNotice.Main.Notification.Content.AlertContent.Text = Content_;
+			newNotice.Main.Position = UDim2.fromScale(1.6,0.5)
+			if Header ~= nil then
+				newNotice.Main.Notification.Topbar.Title.Text = Header;
+			end
+			TweenService:Create(newNotice.Main, TweenInfo.new(2.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+			TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(2.9, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
+
+			local newConnect = nil
+			newConnect = newNotice.Main.Notification.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
+				noticeClosed = true
+				TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+				task.delay(1.2, function()
+					TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+				end)
+				game:GetService("Debris"):AddItem(newNotice, 3.6)
+			end)
+
+			task.delay(3, function()
+				TweenService:Create(newNotice.Main.Notification.ClosingIn, TweenInfo.new(LifeTime, Enum.EasingStyle.Linear), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+				task.wait(LifeTime)
+				if noticeClosed == false then
+					noticeClosed = true
+					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
+					task.delay(2.2, function()
+						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
+					end)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
+				end
+			end)
+		end
+	end
+end;
+		
 --[[ Methods ]] do
 
 	-- Side Button
@@ -1151,6 +1326,7 @@ if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
 end
 
 LoadedIn:Connect(function()
+	Management:notice(Enums.NoticeType.Notice, 5,"Welcome to Nebula Hub!", "WELCOME")
 	Management.newContent("Game")
 	:setSideButtonTitle("Game")
 	:addWindowTitle("Features")
@@ -1595,6 +1771,7 @@ LoadedIn:Connect(function()
 		},
 		defaultValue = false
 	})
+	:addSpacial(_
 
 	Management.setOpenedWindow("Home")
 end)
