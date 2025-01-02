@@ -1,4 +1,22 @@
 return function()
+local Dependencies = NewNebulaHub.Dependencies;
+	
+local RunService = _G.Services.RunService;
+local TweenService = _G.Services.TweenService;
+local Players = _G.Services.Players;
+	
+local Enums = _G.NebulaHub.Dependencies.Manager.Enums;
+local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
+	
+local Management = _G.NebulaHub.Dependencies.Manager.Management;
+
+local Player = _G.LocalPlayer;
+local Character = Player.Character or Player.CharacterAdded:Wait();
+
+local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
+
+local Storage = _G.NebulaHub.Storage
+	
 	local GlobalData = {
 	ESPs = {};
 	GunESP = {};
