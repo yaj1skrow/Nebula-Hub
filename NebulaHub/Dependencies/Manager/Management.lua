@@ -14,7 +14,7 @@ print(_G.Services.RunService)
 
 local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 
-local Signal = G.NebulaHub.Dependencies.Manager.Signal;
+local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
 
 local MainUI = _G.NebulaHub.MainUI;
 local Contents = MainUI:WaitForChild("Content");
