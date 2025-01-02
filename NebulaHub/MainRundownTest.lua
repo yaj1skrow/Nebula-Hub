@@ -41,7 +41,9 @@ print(_G.NebulaHub.GlobalVars.LoadedIn)
 
 local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
-local Storage = Instance.new("Folder", Dependencies)
+local Assets = NewNebulaHub:WaitForChild("Dependencies"):WaitForChild("Assets")
+
+local Storage = Instance.new("Folder", NewNebulaHub:WaitForChild("Dependencies"))
 Storage.Name = "Storage"
 _G.NebulaHub.Storage = Storage
 
@@ -62,7 +64,10 @@ Management.initialize()
 
 LoadedIn:Connect(function()
 	Management:notice(Enums.NoticeType.Notice, 3,"Welcome to Nebula Hub!", "WELCOME")
-
+	
+	Management.newContent("Home", Assets:WaitForChild("HomeContent"))
+	:setSideButtonTitle("Home")
+		
 	for i, PossibleGame in pairs(GameInfo) do
 		if game.PlaceId == PossibleGame.PlaceId then
 			task.wait(0.5)
