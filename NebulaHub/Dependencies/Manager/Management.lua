@@ -36,6 +36,7 @@ local Methods = Management.Methods;
 Methods.__index = Methods;
 
 local isMinimized = false
+local isClosed = false
 
 local MainHub = {
 	Contents = {
@@ -71,11 +72,24 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 --[[ Creator ]] do
 	function Management.initialize()
-		TweenService:Create(MainUI.Stroke.UIGradient, TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Offset = Vector2.new(0,0.5)}):Play()
-		task.delay(1.2, function()
-			TweenService:Create(MainUI, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {GroupTransparency = 0}):Play()
-			TweenService:Create(MainUI, TweenInfo.new(2, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(0.25, 0.05)}):Play()
-			TweenService:Create(MainUI.Stroke, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+		MainUI.GroupTransparency = 1
+		MainUI.Size = UDim2.fromOffset(60, 60)
+		MainUI.Position = UDim2.fromScale(0.5, 0.45)
+		MainUI.Sizer.AspectRatio = 1
+		TweenService:Create(MainUI.Stroke.UIGradient, TweenInfo.new(1.2, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,0.5)}):Play()
+		TweenService:Create(MainUI.Stroke, TweenInfo.new(1.2, Enum.EasingStyle.Quint), {Thickness = 2}):Play()
+		TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {Size = UDim2.fromOffset(32, 32)}):Play()
+		task.delay(1, function()
+			TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {GroupTransparency = 0}):Play()
+			TweenService:Create(MainUI.Stroke, TweenInfo.new(1.2, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+		end)
+		task.delay(1.9, function()
+			TweenService:Create(MainUI.Sizer, TweenInfo.new(2.7, Enum.EasingStyle.Quint), {AspectRatio = 18}):Play()
+			TweenService:Create(MainUI, TweenInfo.new(2.7, Enum.EasingStyle.Quint), {Size = UDim2.fromOffset(609, 430)}):Play()
+		end)
+		task.delay(2.8, function()
+			TweenService:Create(MainUI, TweenInfo.new(3, Enum.EasingStyle.Quint), {Position = UDim2.fromScale(0.25, 0.05)}):Play()
+			TweenService:Create(MainUI.Sizer, TweenInfo.new(2.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play()
 		end)
 
 		MainUI.Parent.Dependencies.Audios.Opening:Play();
@@ -86,7 +100,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 				local distanceMovedX = InitialX - Mouse.X
 				local distanceMovedY = InitialY - Mouse.Y
 
-				MoveTween = TweenService:Create(MainUI, TweenInfo.new(0.3, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out), {Position = UIInitialPos - UDim2.new(0, distanceMovedX, 0, distanceMovedY)}):Play()
+				MainUI.Position = UIInitialPos - UDim2.new(0, distanceMovedX, 0, distanceMovedY)
 			end
 
 			MainUI.Topbar.DragActivator.MouseEnter:Connect(function()
@@ -118,7 +132,9 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 		task.wait(2.5)
 
-		TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint), {AspectRatio = 1.5}):Play();
+		local sizeTween = nil
+		local aspectSizeTween = nil;
+
 		task.delay(0.6, function()
 			TweenService:Create(MainUI.Loading.LoadingContent.Bar, TweenInfo.new(1, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(1,0.05)}):Play();
 
@@ -135,12 +151,52 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					LoadedIn:Fire()
 
 					MainUI.Topbar.Actions.Minimize.Activator.Activated:Connect(function()
+						if sizeTween then
+							sizeTween:Pause()
+						end
+						if aspectSizeTween then
+							aspectSizeTween:Pause()
+						end
 						if isMinimized == false then
 							isMinimized = true
-							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 18}):Play();
+							aspectSizeTween = TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 18}):Play();
+							sizeTween = TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Size = UDim2.fromOffset(609, 430)}):Play();
 						else
 							isMinimized = false
-							TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 1.5}):Play();
+							aspectSizeTween = TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 1.5}):Play();
+							sizeTween = TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Size = UDim2.fromOffset(609, 430)}):Play();
+						end
+					end)
+					
+					MainUI.Topbar.Actions.Close.Activator.Activated:Connect(function()
+						if isClosed == false then
+							if sizeTween then
+								sizeTween:Pause()
+							end
+							if aspectSizeTween then
+								aspectSizeTween:Pause()
+							end
+							isClosed = true
+							isMinimized = false
+							aspectSizeTween = TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 1}):Play();
+							sizeTween = TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Size = UDim2.fromOffset(32, 32)}):Play();
+						end
+					end)
+					
+					MainUI.Topbar.DragActivator.Activated:Connect(function()
+						if isClosed == true then
+							if sizeTween then
+								sizeTween:Pause()
+							end
+							if aspectSizeTween then
+								aspectSizeTween:Pause()
+							end
+							isClosed = false
+							if isMinimized == true then
+								isMinimized = false
+							end
+							aspectSizeTween = TweenService:Create(MainUI.Sizer, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 1.5}):Play();
+							sizeTween = TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Size = UDim2.fromOffset(609, 430)}):Play();
 						end
 					end)
 
@@ -151,7 +207,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 		end)		
 	end
 
-	function Management.newContent(ContentName : string)
+	function Management.newContent(ContentName : string, preset)
 		local self = setmetatable({
 			ContentName = ContentName;
 		}, Methods);
@@ -166,29 +222,45 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 		newSideButton.Name = ContentName;
 
-		local newWindow = Assets:WaitForChild("WindowTemplate"):Clone();
-		newWindow.Parent = MainContents;
-		newWindow.Name = ContentName.."Window"
-		newWindow.Visible = false
+		local newWindow
+		if preset then
+			newWindow = preset:Clone();
+			newWindow.Parent = MainContents;
+			newWindow.Name = ContentName.."Window"
+			newWindow.Visible = false
+		else
+			newWindow = Assets:WaitForChild("WindowTemplate"):Clone();
+			newWindow.Parent = MainContents;
+			newWindow.Name = ContentName.."Window"
+			newWindow.Visible = false
+		end
 
 		self.SideButton = newSideButton;
 		self.SelectionStroke = newSelectedStroke;
 		self.Window = newWindow.Window;
-
+		
 		newSideButton.Activator.Activated:Connect(function()
 			if newWindow.Visible == false then
+				newSelectedStroke.UIGradient.Rotation = -232;
+				TweenService:Create(newSelectedStroke.UIGradient, TweenInfo.new(1.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Rotation = -53}):Play()
 				if Tweenings.Fading ~= nil then
 					Tweenings.Fading:Pause();
 				end;
 				Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+				for i, v in pairs(MainHub.Contents) do
+					if v.Window ~= newWindow.Window then
+						TweenService:Create(v.Selection, TweenInfo.new(.5), {Transparency = 1}):Play()
+					end
+				end
+				TweenService:Create(newSelectedStroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 0}):Play()
 				task.delay(0.5, function()
-					Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 1}):Play();
 					for i, v in pairs(MainHub.Contents) do
-						if v.Window ~= newWindow then
+						if v.Window ~= newWindow.Window then
 							v.Window.Visible = false
 						end
 					end
 					newWindow.Visible = true
+					Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 1}):Play();
 				end)
 			end
 		end)
@@ -196,6 +268,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 		MainHub.Contents[ContentName] = {
 			SideButton = newSideButton;
 			Window = newWindow;
+			Selection = newSelectedStroke;
 		};
 
 		return self;
@@ -203,11 +276,19 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 	function Management.setOpenedWindow(ContentName : string)
 		if MainHub.Contents[ContentName] ~= nil then
+			MainHub.Contents[ContentName].Selection.UIGradient.Rotation = -232;
 			if MainHub.Contents[ContentName].Window.Visible == false then
+				TweenService:Create(MainHub.Contents[ContentName].Selection.UIGradient, TweenInfo.new(1.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Rotation = -53}):Play()
 				if Tweenings.Fading ~= nil then
 					Tweenings.Fading:Pause();
 				end;
 				Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+				for i, v in pairs(MainHub.Contents) do
+					if v.Window ~= MainHub.Contents[ContentName].Window then
+						TweenService:Create(v.Selection, TweenInfo.new(.5), {Transparency = 1}):Play()
+					end
+				end
+				TweenService:Create(MainHub.Contents[ContentName].Selection, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 0}):Play()
 				task.delay(0.5, function()
 					for i, v in pairs(MainHub.Contents) do
 						if v.Window ~= MainHub.Contents[ContentName].Window then
@@ -230,7 +311,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 			end
 
 			local newNotice = Assets:WaitForChild("NoticeTemplate"):Clone();
-			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices").Container
 			newNotice.Visible = true
 			newNotice.Main.SmallNotice.Content.AlertContent.Text = Content_;
 			newNotice.Main.Position = UDim2.fromScale(1.6,1)
@@ -238,6 +319,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 				newNotice.Main.SmallNotice.Topbar.Title.Text = Header;
 			end
 			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2.5}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.SmallNotice.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
@@ -245,7 +327,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(1.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -259,7 +342,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(2.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -273,7 +357,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 			end
 
 			local newNotice = Assets:WaitForChild("AlertTemplate"):Clone();
-			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices").Container
 			newNotice.Visible = true
 			newNotice.Main.Alert.Content.AlertContent.Text = Content_;
 			newNotice.Main.Position = UDim2.fromScale(1.6,1)
@@ -281,6 +365,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 				newNotice.Main.Alert.Topbar.Title.Text = Header;
 			end
 			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.Alert.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
@@ -288,7 +373,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(1.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -302,7 +388,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(2.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -316,7 +403,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 			end
 
 			local newNotice = Assets:WaitForChild("NotificationTemplate"):Clone();
-			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices")
+			newNotice.Parent = MainUI.Parent:WaitForChild("SystemNotices").Container
 			newNotice.Visible = true
 			newNotice.Main.Notification.Content.AlertContent.Text = Content_;
 			newNotice.Main.Position = UDim2.fromScale(1.6,1)
@@ -324,6 +411,7 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 				newNotice.Main.Notification.Topbar.Title.Text = Header;
 			end
 			TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Position = UDim2.fromScale(0.5,1)}):Play()
+			TweenService:Create(newNotice.Sizer, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 2}):Play()
 
 			local newConnect = nil
 			newConnect = newNotice.Main.Notification.Topbar.Actions.Close.CloseButton.Activator.Activated:Connect(function()
@@ -331,7 +419,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(1.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -345,7 +434,8 @@ local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 					noticeClosed = true
 					TweenService:Create(newNotice.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
 					TweenService:Create(newNotice.Main.Sizer, TweenInfo.new(3.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {AspectRatio = 600}):Play()
-					task.delay(2.2, function()
+					task.delay(.8, function()
+						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
 					game:GetService("Debris"):AddItem(newNotice, 3.6)
@@ -371,13 +461,21 @@ end;
 	-- Window
 	function Methods.openWindow(self)
 		if self.Window.Parent.Visible == false then
+			self.Selection.UIGradient.Rotation = -232
+			TweenService:Create(self.Selection.UIGradient, TweenInfo.new(1.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Rotation = -53}):Play()
 			if Tweenings.Fading ~= nil then
 				Tweenings.Fading:Pause();
 			end;
 			Tweenings.Fading = TweenService:Create(MainUI.Fader, TweenInfo.new(0.5, Enum.EasingStyle.Linear), {GroupTransparency = 0}):Play();
+			for i, v in pairs(MainHub.Contents) do
+				if v.Window ~= self.Window then
+					TweenService:Create(v.Selection, TweenInfo.new(.5), {Transparency = 1}):Play()
+				end
+			end
+			TweenService:Create(self.Selection, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 0}):Play()
 			task.delay(0.5, function()
 				for i, v in pairs(MainHub.Contents) do
-					if v.Window ~= self.Window.Parent then
+					if v.Window ~= self.Window then
 						v.Window.Visible = false
 					end
 				end
@@ -426,7 +524,7 @@ end;
 		return self;
 	end
 
-	function Methods.addUnit(self, UnitName, UnitType, Data : {any})
+	function Methods.addUnit(self, UnitName, UnitType, Data : {any}, Connection)
 		Syntax += 1
 		if UnitType == Enums.UnitType.Switch then
 			local newSwitchAction = Assets:WaitForChild("UnitSwitch"):Clone();
@@ -434,6 +532,20 @@ end;
 			newSwitchAction.Visible = true;
 			newSwitchAction.LayoutOrder = Syntax;
 			newSwitchAction.UnitTitle.Text = UnitName
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newSwitchAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newSwitchAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newSwitchAction.Connection;
+				newType.Visible = true
+			end
 
 			newSwitchAction:WaitForChild("Action"):WaitForChild("MainSwitch"):WaitForChild("SwitchButtonView")
 
@@ -484,7 +596,21 @@ end;
 			newStringAction.Visible = true;
 			newStringAction.LayoutOrder = Syntax;
 			newStringAction.UnitTitle.Text = UnitName
-
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newStringAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newStringAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newStringAction.Connection;
+				newType.Visible = true
+			end
+			
 			newStringAction:WaitForChild("Action"):WaitForChild("MainString"):WaitForChild("TextBox")
 
 			Units[UnitName] = {
@@ -524,7 +650,21 @@ end;
 			newDropdownAction.Visible = true;
 			newDropdownAction.LayoutOrder = Syntax;
 			newDropdownAction.UnitTitle.Text = UnitName
-
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newDropdownAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newDropdownAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newDropdownAction.Connection;
+				newType.Visible = true
+			end
+			
 			Syntax += 1
 			local newSpatialDropper = Assets:WaitForChild("Spacial"):Clone()
 			newSpatialDropper.Parent = self.Window
@@ -603,6 +743,7 @@ end;
 						newSpacial.Parent = newDropdownAction.Action.DropdownInt.Container.DropdownMenu
 						newSpacial.Visible = true
 						newSpacial.LayoutOrder = 1000000;
+						table.insert(MainUnit.SelectionUIs, newSpacial)
 						newDropdownAction.Action.DropdownInt.Container.Visible = true;
 						TweenService:Create(newDropdownAction.Action.DropdownInt.Container.Slider, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0,1)}):Play();
 						TweenService:Create(newSpatialDropper, TweenInfo.new(.3, Enum.EasingStyle.Quint), {Size = UDim2.fromScale(0.95, 0.15)}):Play();
@@ -635,7 +776,21 @@ end;
 			newSliderAction.Visible = true;
 			newSliderAction.LayoutOrder = Syntax;
 			newSliderAction.UnitTitle.Text = UnitName;
-
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newSliderAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newSliderAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newSliderAction.Connection;
+				newType.Visible = true
+			end
+			
 			local NewSliderSystem = Slider.new(newSliderAction.Action.SliderBase, {
 				SliderData = {
 					Start = Data.Min, End = Data.Max, Increment = Data.Increment
@@ -688,7 +843,21 @@ end;
 			newToggleAction.Visible = true;
 			newToggleAction.LayoutOrder = Syntax;
 			newToggleAction.UnitTitle.Text = UnitName
-
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newToggleAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newToggleAction.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newToggleAction.Connection;
+				newType.Visible = true
+			end
+			
 			newToggleAction:WaitForChild("Action"):WaitForChild("Activator")
 
 			Units[UnitName] = {
@@ -722,7 +891,21 @@ end;
 			newInfo.Parent = self.Window;
 			newInfo.Visible = true;
 			newInfo.LayoutOrder = Syntax;
-
+			
+			if Connection == "Middle" then
+				local newType = Assets:WaitForChild("TypeMiddle"):Clone()
+				newType.Parent = newInfo.Connection;
+				newType.Visible = true
+			elseif Connection == "Top" then
+				local newType = Assets:WaitForChild("TypeBottom"):Clone()
+				newType.Parent = newInfo.Connection;
+				newType.Visible = true
+			elseif Connection == "Bottom" then
+				local newType = Assets:WaitForChild("TypeTop"):Clone()
+				newType.Parent = newInfo.Connection;
+				newType.Visible = true
+			end
+			
 			Units[UnitName] = {
 				Data = Data;
 				Text = Data.Text;
