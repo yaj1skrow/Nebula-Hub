@@ -1,5 +1,5 @@
 return function()
-local Dependencies = NewNebulaHub.Dependencies;
+local Dependencies = _G.NebulaHub.MainUI.Dependencies;
 	
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
