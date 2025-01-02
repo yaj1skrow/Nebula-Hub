@@ -66,7 +66,8 @@ local MoveTween = nil
 
 local Syntax = 0;
 
-local LoadedIn = Signal.new()
+_G.NebulaHub.GlobalVars.LoadedIn = Signal.new()
+local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 --[[ Creator ]] do
 	function Management.initialize()
