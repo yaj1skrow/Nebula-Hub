@@ -65,24 +65,6 @@ local function InitializeStringRandomizer(length)
 	return RanStr;
 end
 
-local GlobalData = {
-	ESPs = {};
-	GunESP = {};
-	TrapESP = {};
-	OriginalSheriff = nil;
-	PlayerRoles = nil;
-	Connections = {};
-	PlayerWalkspeed = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed;
-	PlayerJumppower = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower;
-	ReloadESP = Signal.new();
-	ChamTypeChanged = Signal.new();
-	FlingTarget = nil;
-	CoinsESP = {};
-	GunDropped = Signal.new();
-	GunTook = Signal.new();
-	ChamType = "Box"
-}
-
 Management.initialize()
 
 LoadedIn:Connect(function()
