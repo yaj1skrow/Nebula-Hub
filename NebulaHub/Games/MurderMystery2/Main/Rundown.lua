@@ -907,11 +907,11 @@ Management.newContent("Game")
 	:addUnit("GunStatus", Enums.UnitType.Info, {
 		Initialize = function(Unit)
 			GlobalData.Connections["CheckGunDropped"] = GlobalData.GunDropped:Connect(function()
-				Unit.UiInfo.Text = `<font color="rgb(110, 255, 139)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>true</b></font>` 
+				Unit.UiInfo.UnitTitle.Text = `<font color="rgb(110, 255, 139)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>true</b></font>` 
 			end)
 
 			GlobalData.Connections["CheckGunTake"] = GlobalData.GunTook:Connect(function()
-				Unit.UiInfo.Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
+				Unit.UiInfoUnitTitle.Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
 			end)
 		end,
 		Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
