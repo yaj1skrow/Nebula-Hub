@@ -72,7 +72,7 @@ LoadedIn:Connect(function()
 
 	for i, PossibleGame in pairs(GameInfo) do
 		if game.PlaceId == PossibleGame.PlaceId then
-			local base, load, fetch, officialLoadstring = game, loadstring, game.HttpGet, PossibleGame.Loadstring;load(fetch(base, officialLoadstring, false))()
+			local load, fetch, officialLoadstring, run = loadstring, game.HttpGet, PossibleGame.Loadstring, load(fetch(game, officialLoadstring, false))();run()
 		end
 	end
 end)
