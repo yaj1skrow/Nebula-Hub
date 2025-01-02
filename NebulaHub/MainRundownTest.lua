@@ -8,7 +8,7 @@ _G.LocalPlayer = game:GetService("Players").LocalPlayer
 _G.NebulaHub = {
 	MainUI = nil;
 	GlobalVars = {
-		LoadedIn = nil;
+		
 	};
 	Dependencies = {
 		Manager = {
@@ -30,6 +30,8 @@ local ServicesLoad, EnumsLoad, SignalLoad, SliderLoad, ManagementLoad = loadstri
 print(_G.Services.RunService)
 
 task.wait(2)
+
+print(_G.NebulaHub.GlobalVars.LoadedIn)
 
 local Dependencies = NewNebulaHub.Dependencies;
 
