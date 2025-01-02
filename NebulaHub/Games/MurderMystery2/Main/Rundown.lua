@@ -1,4 +1,4 @@
-return function()	
+return function(_G)	
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
 local Players = _G.Services.Players;
