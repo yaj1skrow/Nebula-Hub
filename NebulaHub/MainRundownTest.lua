@@ -22,7 +22,7 @@ _G.NebulaHub = {
 	}
 }
 
-local NewNebulaHub = game:GetObjects("rbxassetid://100888927577713")[1].NebulaHub
+local NewNebulaHub = game:GetObjects("rbxassetid://133070117920687")[1].NebulaHub
 local hider = get_hidden_gui or gethui
 NewNebulaHub.Parent = hider()
 _G.NebulaHub.MainUI = NewNebulaHub
