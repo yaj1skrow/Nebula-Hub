@@ -40,7 +40,6 @@ local Players = _G.Services.Players;
 local Enums = _G.NebulaHub.Dependencies.Manager.Enums;
 local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
 
-_G.NebulaHub.GlobalVars.LoadedIn = Signal.new();
 local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
 
 local Player = _G.LocalPlayer;
