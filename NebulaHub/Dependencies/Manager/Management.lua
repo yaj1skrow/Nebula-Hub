@@ -1,18 +1,16 @@
-local RunService = game:GetService("RunService");
-local TweenService = game:GetService("TweenService");
-local Players = game:GetService("Players");
+local RunService = _G.Services.RunService;
+local TweenService = _G.Services.TweenService;
+local Players = _G.Services.Players;
 
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
+local UserInputService = _G.Services.UserInputService
 
-local Slider = require(script.Parent.Parent.Services.Slider)
+local Slider = _G.NebulaHub.Dependencies.Manager.Slider
 
-local Manager = script.Parent;
-local Assets = script.Parent.Parent.Parent:WaitForChild("Dependencies"):WaitForChild("Assets");
+local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 
-local Signal = require(script.Parent.Signal);
+local Signal = G.NebulaHub.Dependencies.Manager.Signal;
 
-local MainUI = script.Parent.Parent.Parent:WaitForChild("MainUI");
+local MainUI = _G.NebulaHub.MainUI;
 local Contents = MainUI:WaitForChild("Content");
 
 local SideBar = Contents:WaitForChild("SideBar");
@@ -733,4 +731,4 @@ end;
 	end;
 end;
 
-return Management;
+_G.NebulaHub.Dependencies.Manager.Management = Management;
