@@ -339,16 +339,12 @@ Management.newContent("Game")
 	:addSpacialLine()
 	:addWindowSubtitle("Chams")
 	:addUnit("Player Chams", Enums.UnitType.Switch, {
-		onActivated = function(MainUnit, Value)			
-			local function InitializeESP()
-				for i, esp in pairs(GlobalData.ESPs) do
-					esp:Destroy();
-				end;
-
+		onActivated = function(MainUnit, Value)	
+			local function createEsp(Player_)
 				if GlobalData.ChamType == "Highlight" then
-					for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
+					task.spawn(function()
 						local newHighlight = Instance.new("Highlight", Storage)
-						newHighlight.Name = Player.Name
+						newHighlight.Name = Player_.Name
 						newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
 						newHighlight.FillTransparency = 0.35
 						newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
@@ -356,26 +352,74 @@ Management.newContent("Game")
 						newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
 						table.insert(GlobalData.ESPs, newHighlight);
-					end
+
+						if Player_ == private.findSheriff() then
+							if newHighlight then
+								newHighlight.Adornee = Player_.Character
+								newHighlight.FillColor = Color3.fromRGB(105, 125, 255)
+								newHighlight.OutlineColor = Color3.fromRGB(105, 125, 255)
+							end
+						elseif Player_ == private.findMurderer() then
+							if newHighlight then
+								newHighlight.Adornee = Player_.Character
+								newHighlight.FillColor = Color3.fromRGB(255, 97, 97)
+								newHighlight.OutlineColor = Color3.fromRGB(255, 97, 97)
+							end
+						elseif Player_ == private.findHero() then
+							if newHighlight then
+								newHighlight.Adornee = Player_.Character
+								newHighlight.FillColor = Color3.fromRGB(255, 237, 98)
+								newHighlight.OutlineColor = Color3.fromRGB(255, 237, 98)
+							end
+						else
+							if newHighlight then
+								newHighlight.Adornee = Player_.Character
+								newHighlight.FillColor = Color3.fromRGB(157, 255, 111)
+								newHighlight.OutlineColor = Color3.fromRGB(157, 255, 111)
+							end
+						end
+					end)
 				else
-					for i, Player in pairs(game:GetService("Players"):GetPlayers()) do
-						local Character = Player.Character
-						if Character then
-							for i, bodyPart in pairs(Character:GetChildren()) do
-								if bodyPart:IsA("BasePart") then
-									for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+					local Character = Player_.Character
+					if Character then
+						for i, bodyPart in pairs(Character:GetChildren()) do
+							if bodyPart:IsA("BasePart") then
+								for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+									task.spawn(function()
 										local newChammer = _BoxCham:Clone()
+										newChammer.Enabled = true
 										newChammer.Parent = bodyPart
-										newChammer.Name = newChammer.Name..Player.Name
-										newChammer.PSE.BackgroundColor3 = Color3.fromRGB(157, 255, 111)
+										newChammer.Name = newChammer.Name..Player_.Name
+										if Player_ == private.findSheriff() then
+											newChammer.PSE.BackgroundColor3 = Color3.fromRGB(105, 125, 255)
+										elseif Player_ == private.findMurderer() then
+											newChammer.PSE.BackgroundColor3 = Color3.fromRGB(255, 97, 97)
+										elseif Player_ == private.findHero() then
+											newChammer.PSE.BackgroundColor3 = Color3.fromRGB(255, 237, 98)
+										else
+											newChammer.PSE.BackgroundColor3 = Color3.fromRGB(157, 255, 111)
+										end
 										newChammer.Adornee = nil;
 
 										table.insert(GlobalData.ESPs, newChammer);
-									end
+									end)
 								end
 							end
 						end
 					end
+				end
+			end
+
+			local function InitializeESP()
+				for i, esp in pairs(GlobalData.ESPs) do
+					esp:Destroy();
+				end;
+
+				for i, Player_ in pairs(game:GetService("Players"):GetPlayers()) do
+					if Player_ == Player then continue end
+					task.spawn(function()
+						createEsp(Player_)
+					end)
 				end
 			end
 
@@ -385,24 +429,32 @@ Management.newContent("Game")
 					for i, player in pairs(game:GetService("Players"):GetPlayers()) do
 						if player == private.findSheriff() then
 							local esp = Storage:FindFirstChild(player.Name)
-							esp.Adornee = player.Character
-							esp.FillColor = Color3.fromRGB(105, 125, 255)
-							esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+							if esp then
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(105, 125, 255)
+								esp.OutlineColor = Color3.fromRGB(105, 125, 255)
+							end
 						elseif player == private.findMurderer() then
 							local esp = Storage:FindFirstChild(player.Name)
-							esp.Adornee = player.Character
-							esp.FillColor = Color3.fromRGB(255, 97, 97)
-							esp.OutlineColor = Color3.fromRGB(255, 97, 97)
+							if esp then
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(255, 97, 97)
+								esp.OutlineColor = Color3.fromRGB(255, 97, 97)
+							end
 						elseif Player == private.findHero() then
 							local esp = Storage:FindFirstChild(player.Name)
-							esp.Adornee = player.Character
-							esp.FillColor = Color3.fromRGB(255, 237, 98)
-							esp.OutlineColor = Color3.fromRGB(255, 237, 98)
+							if esp then
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(255, 237, 98)
+								esp.OutlineColor = Color3.fromRGB(255, 237, 98)
+							end
 						else
 							local esp = Storage:FindFirstChild(player.Name)
-							esp.Adornee = player.Character
-							esp.FillColor = Color3.fromRGB(157, 255, 111)
-							esp.OutlineColor = Color3.fromRGB(157, 255, 111)
+							if esp then
+								esp.Adornee = player.Character
+								esp.FillColor = Color3.fromRGB(157, 255, 111)
+								esp.OutlineColor = Color3.fromRGB(157, 255, 111)
+							end
 						end
 					end
 				else
@@ -460,12 +512,18 @@ Management.newContent("Game")
 
 			loadEsp()
 
-			GlobalData.Connections["PlayerAdd"] = game:GetService("Players").ChildAdded:Connect(function()
-				loadEsp()
+			GlobalData.Connections["PlayerAdd"] = game:GetService("Players").ChildAdded:Connect(function(child)
+				loadEsp(child)
 			end)
 
 			GlobalData.Connections["ReceiveReload"] = GlobalData.ReloadESP:Connect(function()
 				loadEsp()
+			end)
+
+			GlobalData.Connections["WorkspaceAdded"] = workspace.ChildAdded:Connect(function(child)
+				if game:GetService("Players"):FindFirstChild(child.Name) then
+					createEsp(game:GetService("Players"):FindFirstChild(child.Name))
+				end
 			end)
 
 			GlobalData.Connections["PlayerRemove"] = game:GetService("Players").ChildRemoved:Connect(function()
@@ -488,13 +546,16 @@ Management.newContent("Game")
 			if GlobalData.Connections["ReceiveReload"] ~= nil then
 				GlobalData.Connections["ReceiveReload"]:Disconnect();
 			end
+			if GlobalData.Connections["WorkspaceAdded"] ~= nil then
+				GlobalData.Connections["WorkspaceAdded"]:Disconnect();
+			end
 			for i, esp in pairs(GlobalData.ESPs) do
 				esp:Destroy();
 			end;
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Top")
 	:addUnit("Dropped Gun Cham", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)
 			--local function TrackGunActions(GunDrop)
@@ -524,18 +585,18 @@ Management.newContent("Game")
 					newHighlight.Adornee = location
 					table.insert(GlobalData.GunESP, newHighlight)
 				else
-					local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
-					newHighlight.Parent = Storage;
-					newHighlight.Size = Vector3.new(1.5, 1.5, 1.5)
-					newHighlight.Name = "GunDrop";
-					newHighlight.Position = location:IsA("BasePart") and location.Position or location:IsA("Model") and location:GetPivot().Position or location:IsA("Attachment") and location.WorldPosition;
-					for i, v in pairs(newHighlight:GetDescendants()) do
-						if v.Name == "PSE" then
-							v.BackgroundColor3 = Color3.fromRGB(188, 133, 255)
-						end
-					end
+					for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+						task.spawn(function()
+							local newChammer = _BoxCham:Clone()
+							newChammer.Enabled = true
+							newChammer.Parent = location
+							newChammer.Name = newChammer.Name.."GunDrop"
+							newChammer.PSE.BackgroundColor3 = Color3.fromRGB(188, 133, 255)
+							newChammer.Adornee = nil;
 
-					table.insert(GlobalData.GunESP, newHighlight)
+							table.insert(GlobalData.GunESP, newChammer);
+						end)
+					end
 				end
 			end
 
@@ -590,7 +651,7 @@ Management.newContent("Game")
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Middle")
 	:addUnit("Trap Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)
 			local function CreateTrapESP(location)
@@ -601,27 +662,27 @@ Management.newContent("Game")
 				if GlobalData.ChamType == "Highlight" then
 					local newHighlight = Instance.new("Highlight", Storage)
 					newHighlight.Name = "Trap"
-					newHighlight.FillColor = Color3.fromRGB(180, 53, 83)
+					newHighlight.FillColor = Color3.fromRGB(188, 133, 255)
 					newHighlight.FillTransparency = 0.35
-					newHighlight.OutlineColor = Color3.fromRGB(180, 53, 83)
+					newHighlight.OutlineColor = Color3.fromRGB(188, 133, 255)
 					newHighlight.OutlineTransparency = 0.4
 					newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
 					newHighlight.Adornee = location
 					table.insert(GlobalData.TrapESP, newHighlight)
 				else
-					local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
-					newHighlight.Parent = Storage;
-					newHighlight.Name = "Trap";
-					newHighlight.Size = Vector3.new(2, 0.8, 2)
-					newHighlight.Position = location:IsA("BasePart") and location.Position or location:IsA("Model") and location:GetPivot().Position or location:IsA("Attachment") and location.WorldPosition;
-					for i, v in pairs(newHighlight:GetDescendants()) do
-						if v.Name == "PSE" then
-							v.BackgroundColor3 = Color3.fromRGB(180, 53, 83)
-						end
-					end
+					for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+						task.spawn(function()
+							local newChammer = _BoxCham:Clone()
+							newChammer.Enabled = true
+							newChammer.Parent = location.Trigger
+							newChammer.Name = newChammer.Name.."Trap"
+							newChammer.PSE.BackgroundColor3 = Color3.fromRGB(141, 0, 0)
+							newChammer.Adornee = nil;
 
-					table.insert(GlobalData.TrapESP, newHighlight)
+							table.insert(GlobalData.TrapESP, newChammer);
+						end)
+					end
 				end
 			end
 
@@ -677,7 +738,7 @@ Management.newContent("Game")
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Middle")
 	:addUnit("Coin Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)
 			local function CreateCoinESP()
@@ -687,34 +748,37 @@ Management.newContent("Game")
 
 				if GlobalData.ChamType == "Highlight" then
 					for i, Coin in pairs(workspace:GetDescendants()) do
-						if Coin.Name == "CoinVisual" then
-							local newHighlight = Instance.new("Highlight", Storage)
-							newHighlight.Name = "CoinVisual"
-							newHighlight.FillColor = Color3.fromRGB(180, 170, 29)
-							newHighlight.FillTransparency = 0.35
-							newHighlight.OutlineColor = Color3.fromRGB(180, 170, 29)
-							newHighlight.OutlineTransparency = 0.4
-							newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+						if Coin.Parent.Name ~= "CoinVisual" then
+							if Coin.Name == "CoinVisual" then
+								local newHighlight = Instance.new("Highlight", Storage)
+								newHighlight.Name = "CoinVisual"
+								newHighlight.FillColor = Color3.fromRGB(180, 170, 29)
+								newHighlight.FillTransparency = 0.35
+								newHighlight.OutlineColor = Color3.fromRGB(180, 170, 29)
+								newHighlight.OutlineTransparency = 0.4
+								newHighlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-							newHighlight.Adornee = Coin
-							table.insert(GlobalData.CoinsESP, newHighlight)
+								newHighlight.Adornee = Coin
+								table.insert(GlobalData.CoinsESP, newHighlight)
+							end
 						end
 					end
 				else
 					for i, Coin in pairs(workspace:GetDescendants()) do
 						if Coin.Name == "CoinVisual" then
 							if Coin.Transparency == 0 then
-								local newHighlight = Assets:WaitForChild("ChamBox"):Clone()
-								newHighlight.Parent = Storage;
-								newHighlight.Name = "CoinVisual";
-								newHighlight.Position = Coin:IsA("BasePart") and Coin.Position or Coin:IsA("Model") and Coin:GetPivot().Position or Coin:IsA("Attachment") and Coin.WorldPosition;
-								for i, v in pairs(newHighlight:GetDescendants()) do
-									if v.Name == "PSE" then
-										v.BackgroundColor3 = Color3.fromRGB(180, 170, 29)
-									end
-								end
+								for i, _BoxCham in pairs(Assets:WaitForChild("ChamBox"):GetChildren()) do
+									task.spawn(function()
+										local newChammer = _BoxCham:Clone()
+										newChammer.Enabled = true
+										newChammer.Parent = Coin.Parent
+										newChammer.Name = newChammer.Name.."Coin"
+										newChammer.PSE.BackgroundColor3 = Color3.fromRGB(255, 204, 0)
+										newChammer.Adornee = nil;
 
-								table.insert(GlobalData.CoinsESP, newHighlight)
+										table.insert(GlobalData.CoinsESP, newChammer);
+									end)
+								end
 							end
 						end
 					end
@@ -756,12 +820,10 @@ Management.newContent("Game")
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Middle")
 	:addUnit("Cham Type", Enums.UnitType.Dropdown, {
 		Initialize = function(Unit)
-			print("?")
 			Unit.OnValueChanged:Connect(function(Value)
-				print("e?")
 				GlobalData.ChamType = Value.Name
 				GlobalData.ChamTypeChanged:Fire()
 			end)
@@ -785,11 +847,14 @@ Management.newContent("Game")
 		end,
 		cooldown = 0.2,
 
-	})
+	}, "Bottom")
 	:addSpacial()
 	:addWindowSubtitle("Innocent")
 	:addUnit("Get Dropped Gun", Enums.UnitType.Toggle, {
-		onActivated = function()
+		onActivated = function(Unit, Value)
+			if GlobalData["GunGetDeb"] == true then
+				return
+			end
 			if Character then
 				if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
 				local FindGun = private.getMap():FindFirstChild("GunDrop")
@@ -797,11 +862,12 @@ Management.newContent("Game")
 				local CancelGunFetch = false
 
 				if FindGun then
+					GlobalData["GunGetDeb"] = true
 					local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
 					local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
 					Character:WaitForChild("HumanoidRootPart").Anchored = true;
 					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
-					Character:PivotTo(FindGun:GetPivot())
+					Character.PrimaryPart.CFrame = FindGun:GetPivot()
 					task.delay(3, function()
 						if GunFetchedSuccess == false then
 							CancelGunFetch = true
@@ -816,54 +882,61 @@ Management.newContent("Game")
 					if CancelGunFetch then
 						Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
 					end
-					Character:PivotTo(KeptOriginalCFrame)
+					Character.PrimaryPart.CFrame = KeptOriginalCFrame
 					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
 					Character:WaitForChild("HumanoidRootPart").Anchored = false;
 					Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
+					GlobalData["GunGetDeb"] = false
 				else
 					Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed.", "ERROR")
 				end
 			end
 		end,
 		cooldown = 0.2,
-	})
+	}, "Top")
 	:addUnit("Auto Grab Gun", Enums.UnitType.Switch, {
 		onActivated = function()
+			if GlobalData["GunGetDeb"] == true then
+				return
+			end
 			if Character then
-				if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
-				local FindGun = private.getMap():FindFirstChild("GunDrop")
-				local GunFetchedSuccess = false
-				local CancelGunFetch = false
+				if private.getMap() ~= nil then
+					local FindGun = private.getMap():FindFirstChild("GunDrop")
+					local GunFetchedSuccess = false
+					local CancelGunFetch = false
 
-				if FindGun then
-					local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
-					local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
-					Character:WaitForChild("HumanoidRootPart").Anchored = true;
-					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
-					Character:PivotTo(FindGun:GetPivot())
-					task.delay(3, function()
-						if GunFetchedSuccess == false then
-							CancelGunFetch = true
+					if FindGun then
+						GlobalData["GunGetDeb"] = true
+						local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
+						local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
+						Character:WaitForChild("HumanoidRootPart").Anchored = true;
+						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
+						Character:PivotTo(FindGun:GetPivot())
+						task.delay(3, function()
+							if GunFetchedSuccess == false then
+								CancelGunFetch = true
+							end
+						end)
+						Player.Backpack.ChildAdded:Connect(function(child)
+							if child:IsA("Tool") and child.Name == "Gun" then
+								GunFetchedSuccess = true
+							end
+						end)
+						repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
+						if CancelGunFetch then
+							Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
 						end
-					end)
-					Player.Backpack.ChildAdded:Connect(function(child)
-						if child:IsA("Tool") and child.Name == "Gun" then
-							GunFetchedSuccess = true
-						end
-					end)
-					repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
-					if CancelGunFetch then
-						Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
+						Character:PivotTo(KeptOriginalCFrame)
+						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
+						Character:WaitForChild("HumanoidRootPart").Anchored = false;
+						Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
+						GlobalData["GunGetDeb"] = false
+					else
+						Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed. Will automatically teleport you when found.", "ERROR")
 					end
-					Character:PivotTo(KeptOriginalCFrame)
-					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
-					Character:WaitForChild("HumanoidRootPart").Anchored = false;
-					Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
-				else
-					Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed. Will automatically teleport you when found.", "ERROR")
 				end
 			end
-			
+
 			GlobalData.Connections["GunGrabber"] = GlobalData.GunDropped:Connect(function(gunDrop)
 				if Character then
 					if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
@@ -907,7 +980,7 @@ Management.newContent("Game")
 			end
 		end,
 		defaultValue = false,
-	})
+	}, "Bottom")
 	:addUnit("GunStatus", Enums.UnitType.Info, {
 		Initialize = function(Unit)
 			GlobalData.Connections["CheckGunDropped"] = GlobalData.GunDropped:Connect(function()
@@ -915,7 +988,7 @@ Management.newContent("Game")
 			end)
 
 			GlobalData.Connections["CheckGunTake"] = GlobalData.GunTook:Connect(function()
-				Unit.UiInfoUnitTitle.Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
+				Unit.UiInfo.UnitTitle.Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
 			end)
 		end,
 		Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
@@ -981,7 +1054,7 @@ Management.newContent("Game")
 		Min = 16,
 		Max = 30,
 		Increment = 1,
-	})
+	}, "Top")
 	:addUnit("Loop WalkSpeed", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
 			GlobalData.Connections["KeepWalkspeed"] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):GetPropertyChangedSignal("WalkSpeed"):Connect(function()
@@ -997,7 +1070,7 @@ Management.newContent("Game")
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Bottom")
 	:addUnit("JumpPower", Enums.UnitType.Slider, {
 		Initialize = function(Unit)
 			Unit.OnValueChanged:Connect(function(Value)
@@ -1014,7 +1087,7 @@ Management.newContent("Game")
 		Min = 0,
 		Max = 100,
 		Increment = 1,
-	})
+	}, "Top")
 	:addUnit("Loop JumpPower", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
 			GlobalData.Connections["KeepJumppower"] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid"):GetPropertyChangedSignal("JumpPower"):Connect(function()
@@ -1030,7 +1103,7 @@ Management.newContent("Game")
 		end,
 		defaultValue = false,
 		cooldown = 0.2,
-	})
+	}, "Bottom")
 	:addSpacial()
 	:addWindowTitle("Trolling")
 	:addSpacialLine()
@@ -1080,7 +1153,7 @@ Management.newContent("Game")
 		end,
 		cooldown = 0.2,
 
-	})
+	}, "Top")
 	:addUnit("Fling", Enums.UnitType.Toggle, {
 		onActivated = function(MainUnit, Value)
 			if GlobalData.FlingTarget ~= nil then
@@ -1090,7 +1163,7 @@ Management.newContent("Game")
 			end
 		end,
 		cooldown = 0.2,
-	})
+	}, "Bottom")
 	:addUnit("Anti-Fling", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)
 			--local function miniFling(playerToFling)
