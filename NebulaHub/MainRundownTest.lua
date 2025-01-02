@@ -35,6 +35,7 @@ local TweenService = _G.Services.TweenService;
 local Players = _G.Services.Players;
 
 local Enums = _G.NebulaHub.Dependencies.Manager.Enums;
+local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
 
 local Player = _G.LocalPlayer;
 local Character = Player.Character or Player.CharacterAdded:Wait();
