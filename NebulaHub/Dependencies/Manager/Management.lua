@@ -16,6 +16,9 @@ local Contents = MainUI:WaitForChild("Content");
 local SideBar = Contents:WaitForChild("SideBar");
 local MainContents = Contents:WaitForChild("MainContents");
 
+print(_G.Services.RunService)
+print(_G.NebulaHub.MainUI)
+
 local Management = {};
 Management.__index = Management;
 Management.Methods = {};
