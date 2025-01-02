@@ -1,5 +1,22 @@
 return function()
-	local GlobalData = _G.NebulaHub.Game.GlobalData
+	local GlobalData = {
+	ESPs = {};
+	GunESP = {};
+	TrapESP = {};
+	OriginalSheriff = nil;
+	PlayerRoles = nil;
+	Connections = {};
+	PlayerWalkspeed = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed;
+	PlayerJumppower = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower;
+	ReloadESP = Signal.new();
+	ChamTypeChanged = Signal.new();
+	FlingTarget = nil;
+	CoinsESP = {};
+	GunDropped = Signal.new();
+	GunTook = Signal.new();
+	ChamType = "Box"
+}
+
   local private = {}
 
 function private.findHero()
