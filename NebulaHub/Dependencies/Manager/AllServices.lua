@@ -1,4 +1,4 @@
-return {
+{
 	RunService = game:GetService("RunService");
 	TweenService = game:GetService("TweenService");
 	Players = game:GetService("Players");
