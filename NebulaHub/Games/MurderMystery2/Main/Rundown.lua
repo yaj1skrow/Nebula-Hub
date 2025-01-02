@@ -322,7 +322,8 @@ if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
 	end)
 	
 	GlobalData.Connections["RoundEnding"] = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("RoundEndFade", 5).OnClientEvent:Connect(function()
-		GlobalData.ReloadESP:Fire()		
+		GlobalData.ReloadESP:Fire()	
+				GlobalData.GunTook:Fire()
 	end)
 end
 
