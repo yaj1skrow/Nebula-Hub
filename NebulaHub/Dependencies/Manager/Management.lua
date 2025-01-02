@@ -17,6 +17,9 @@ local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("As
 local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
 
 local MainUI = _G.NebulaHub.MainUI;
+
+task.wait(1)
+
 local Contents = MainUI:WaitForChild("Content");
 
 local SideBar = Contents:WaitForChild("SideBar");
