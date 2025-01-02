@@ -65,11 +65,14 @@ LoadedIn:Connect(function()
 
 	Assets:WaitForChild("HomeContent").Window.Information.AccountInfo.Up.User.Text = Player.Name
 	Assets:WaitForChild("HomeContent").Window.Information.AccountInfo.Up.Display.Text = Player.DisplayName
+		Assets:WaitForChild("HomeContent").Window.Information.PlayerThumbnail.Up.Thumbnail.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	Assets:WaitForChild("HomeContent").Window.Information.PlayerThumbnail.Up.Thumbnail.Image = _G.Services.Players:GetUserThumbnailAsync(Player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
 		
 	Management.newContent("Home", Assets:WaitForChild("HomeContent"))
 	:setSideButtonTitle("Home")
-		
+
+	Management.setOpenedWindow("Home")
+
 	for i, PossibleGame in pairs(GameInfo) do
 		if game.PlaceId == PossibleGame.PlaceId then
 			task.wait(0.5)
