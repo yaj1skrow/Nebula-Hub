@@ -4,7 +4,7 @@ local RunService = _G.Services.RunService
 local UserInputService = _G.Services.UserInputService
 local TweenService = _G.Services.TweenService
 
-local Signal = _G.NebulaHub.Dependencies.Manager.Signal = Signal;
+local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
 
 local SliderFuncs = {}
 
