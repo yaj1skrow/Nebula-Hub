@@ -29,7 +29,7 @@ print(_G.NebulaHub.MainUI)
 local Management = {};
 Management.__index = Management;
 Management.Methods = {};
-Management.Enums = require(script.Parent.Enums)
+Management.Enums = _G.NebulaHub.Dependencies.Manager.Enums
 local Enums = Management.Enums;
 local Methods = Management.Methods;
 Methods.__index = Methods;
