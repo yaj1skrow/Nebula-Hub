@@ -1,4 +1,5 @@
 return function()
+	local GlobalData = _G.NebulaHub.Game.GlobalData
   local private = {}
 
 function private.findHero()
