@@ -40,6 +40,7 @@ local Storage = Instance.new("Folder", Dependencies)
 Storage.Name = "Storage"
 _G.NebulaHub.Storage = Storage
 
+local Enums = _G.NebulaHub.Dependencies.Manager.Enums;
 local Management = _G.NebulaHub.Dependencies.Manager.Management;
 
 local function InitializeStringRandomizer(length)
@@ -59,9 +60,11 @@ LoadedIn:Connect(function()
 
 	for i, PossibleGame in pairs(GameInfo) do
 		if game.PlaceId == PossibleGame.PlaceId then
-			local load, fetch, officialLoadstring, run = loadstring, game.HttpGet, PossibleGame.Loadstring, load(fetch(game, officialLoadstring, false))();run()
+			task.wait(0.5)
+			loadstring(game:HttpGet(tostring(PossibleGame.Loadstring)))()(_G)
+			break
 		end
 	end
 end)
 
-Dependencies.Parent.Name = InitializeStringRandomizer(7)
+_G.NebulaHub.MainUI.Name = InitializeStringRandomizer(7)
