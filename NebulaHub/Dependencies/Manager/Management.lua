@@ -1,6 +1,7 @@
 print("Running Management")
 print(_G.Services.RunService)
 print("Success")
+print("Main loading")
 
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
