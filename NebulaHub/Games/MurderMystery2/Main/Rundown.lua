@@ -1,5 +1,5 @@
 return function()
-local Dependencies = _G.NebulaHub.MainUI.Dependencies;
+local Dependencies = _G.NebulaHub.MainUI:WaitForChild("Dependencies");
 	
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
