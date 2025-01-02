@@ -790,6 +790,7 @@ Management.newContent("Game")
 	:addUnit("Get Dropped Gun", Enums.UnitType.Toggle, {
 		onActivated = function()
 			if Character then
+				if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
 				local FindGun = private.getMap():FindFirstChild("GunDrop")
 				local GunFetchedSuccess = false
 				local CancelGunFetch = false
@@ -828,6 +829,7 @@ Management.newContent("Game")
 	:addUnit("Auto Grab Gun", Enums.UnitType.Switch, {
 		onActivated = function()
 			if Character then
+				if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
 				local FindGun = private.getMap():FindFirstChild("GunDrop")
 				local GunFetchedSuccess = false
 				local CancelGunFetch = false
@@ -863,6 +865,7 @@ Management.newContent("Game")
 			
 			GlobalData.Connections["GunGrabber"] = GlobalData.GunDropped:Connect(function(gunDrop)
 				if Character then
+					if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
 					local FindGun = private.getMap():FindFirstChild("GunDrop")
 					local GunFetchedSuccess = false
 					local CancelGunFetch = false
