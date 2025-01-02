@@ -1,6 +1,4 @@
-return function()
-local Dependencies = _G.NebulaHub.MainUI:WaitForChild("Dependencies");
-	
+return function()	
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
 local Players = _G.Services.Players;
