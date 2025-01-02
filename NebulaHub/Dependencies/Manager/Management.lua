@@ -1,10 +1,15 @@
+print("Running Management")
+print(_G.Services.RunService)
+
 local RunService = _G.Services.RunService;
 local TweenService = _G.Services.TweenService;
 local Players = _G.Services.Players;
 
 local UserInputService = _G.Services.UserInputService
 
-local Slider = _G.NebulaHub.Dependencies.Manager.Slider
+local Slider = _G.NebulaHub.Dependencies.Services.Slider
+
+print(_G.Services.RunService)
 
 local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 
