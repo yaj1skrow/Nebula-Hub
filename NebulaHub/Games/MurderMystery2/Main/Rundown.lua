@@ -1,4 +1,4 @@
-return function(getgenv())	
+return function()	
 local RunService = getgenv().Services.RunService;
 local TweenService = getgenv().Services.TweenService;
 local Players = getgenv().Services.Players;
