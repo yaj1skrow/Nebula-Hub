@@ -35,14 +35,14 @@ getgenv().NebulaHub.Loaded["MM2"] = {}
    getgenv().NebulaHub.Loaded["MM2"].private = {}
 
   MainLogic = {
-    "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/PlayerChams.lua"
+    [1] = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/PlayerChams.lua"
   }
 
  local MainContent = Management.newContent("Game")
 	MainContent:setSideButtonTitle("MM2")
 
   local function Init()
-    for logicApi, val in pairs(MainLogic) do
+    for val, logicApi in pairs(MainLogic) do
       loadstring(game:HttpGet(logicApi, false))()(MainContent)
     end
   end
