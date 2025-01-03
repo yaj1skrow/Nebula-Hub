@@ -27,12 +27,7 @@ return function()
 
 	local function Init()
 		for val, logicApi in pairs(MainLogic) do
-			print(logicApi)
-      			local good, bad = pcall(function()
-					loadstring(game:HttpGet(logicApi, false))()(MainContent)
-				end)
-
-			if not good then print(bad) end
+			loadstring(game:HttpGet(logicApi, false))()(MainContent)
     		end
 	end
 
