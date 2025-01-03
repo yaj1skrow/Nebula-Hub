@@ -29,7 +29,11 @@ return function()
 
 	local function Init()
 		for val, logicApi in pairs(MainLogic) do
+			print(Path..logicApi)
+			print(Path)
+			print(logicApi)
 			loadstring(game:HttpGet(Path..logicApi, false))()(MainContent)
+			print("ran")
     		end
 	end
 
