@@ -42,7 +42,7 @@ getgenv().NebulaHub.Loaded["MM2"] = {}
 	MainContent:setSideButtonTitle("MM2")
 
   local function Init()
-    for _, logicApi in pairs(MainLogic) do
+    for logicApi, val in pairs(MainLogic) do
       loadstring(game:HttpGet(logicApi, false))()(MainContent)
     end
   end
