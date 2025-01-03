@@ -26,12 +26,9 @@ return function()
 	MainContent:setSideButtonTitle("Universal")
 
 	local function Init()
-		print("Passed")
 		for val, logicApi in pairs(MainLogic) do
-			print("trying")
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua", false))()(MainContent)
-			print("PassedSecond")
-		end
+      			loadstring(game:HttpGet(logicApi, false))()(MainContent)
+    		end
 	end
 
 	Init()
