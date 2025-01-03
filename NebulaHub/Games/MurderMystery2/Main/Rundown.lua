@@ -30,7 +30,7 @@ local Storage = getgenv().NebulaHub.Storage
 	CoinsESP = {};
 	GunDropped = Signal.new();
 	GunTook = Signal.new();
-	ChamType = "Box"
+	ChamType = "Box";
 	InRound = true;
 	GunGetDeb = false;
 }
