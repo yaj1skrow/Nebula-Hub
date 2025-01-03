@@ -397,7 +397,9 @@ return function()
 	:addSpacialLine()
 	
 	local function Init()
+		print("test?")
 		for val, logicApi in pairs(MainLogic) do
+			print("here goes nothing.")
 			if logicApi == "Spacial" then
 				MainContent:addSpacial()
 			elseif logicApi == "SpacialLine" then
@@ -408,7 +410,8 @@ return function()
 				elseif logicApi.Add == "Title" then
 					MainContent:addWindowTitle(logicApi.Value)
 				end
-			else
+			elseif string.find(logicApi, "lua") then
+				print("here goes nothing. found directory.. now initializing.")
 				loadstring(game:HttpGet(Path..logicApi, false))()(MainContent)
 			end
 
