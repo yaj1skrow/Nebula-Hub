@@ -20,6 +20,8 @@ return function()
 
 	local UniversalDatasave = MainAPI.newGameConfig("Universal")
 	getgenv().NebulaHub.Loaded["Universal"].ConfigData = MainAPI.newGameConfig("Universal")
+
+	local Path = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/"
 	
 	local MainLogic = {
 		"Test.lua"
@@ -30,7 +32,7 @@ return function()
 
 	local function Init()
 		for val, logicApi in pairs(MainLogic) do
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/"..logicApi, false))()(MainContent)
+			loadstring(game:HttpGet(Path..logicApi, false))()(MainContent)
     		end
 	end
 
