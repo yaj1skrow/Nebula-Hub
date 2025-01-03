@@ -34,8 +34,8 @@ getgenv().NebulaHub.Loaded["MM2"] = {}
   
    getgenv().NebulaHub.Loaded["MM2"].private = {}
 
-  MainLogic = {
-    [1] = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/PlayerChams.lua"
+  local MainLogic = {
+   	"https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/PlayerChams.lua"
   }
 
  local MainContent = Management.newContent("Game")
