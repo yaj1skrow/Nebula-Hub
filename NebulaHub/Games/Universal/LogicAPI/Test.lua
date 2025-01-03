@@ -16,5 +16,5 @@ return function(Content)
       Initialize = function()
         print("success");
       end;
-    };
+    });
 end
