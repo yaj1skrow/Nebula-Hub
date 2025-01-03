@@ -6,7 +6,7 @@ local TweenService = game:GetService("TweenService")
 
 assert(RunService:IsClient(), "Slider module can only be used on the Client!")
 
-local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
+local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
 
 local SliderFuncs = {}
 
@@ -376,4 +376,4 @@ UserInputService.InputEnded:Connect(function(inputObject: InputObject, internall
 	end 
 end)
 
-_G.NebulaHub.Dependencies.Services.Slider = Slider;
+getgenv().NebulaHub.Dependencies.Services.Slider = Slider;
