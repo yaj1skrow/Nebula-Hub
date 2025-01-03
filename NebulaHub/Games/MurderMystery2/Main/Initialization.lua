@@ -31,14 +31,11 @@ return function()
 		InRound = true;
 		GunGetDeb = false;
 	}
-
-	getgenv().NebulaHub.Loaded["MM2"].private = {}
-
-	print(getgenv().NebulaHub.Loaded["MM2"])
 	
 	local GlobalData = getgenv().NebulaHub.Loaded["MM2"].GlobalData
+	local private = {}
 	
-	function getgenv().NebulaHub.Loaded["MM2"].private.findHero()
+	function privatr.findHero()
 		if GlobalData.PlayerRoles then
 			for player, data in GlobalData.PlayerRoles do
 				if data.Role == "Hero" then
@@ -52,10 +49,10 @@ return function()
 		end
 	end
 
-	function getgenv().NebulaHub.Loaded["MM2"].private.findSheriff()
+	function privatr.findSheriff()
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
-				if player ~= getgenv().NebulaHub.Loaded["MM2"].private.findHero() then
+				if player ~= privatr.findHero() then
 					if player:FindFirstChild("Backpack") then
 						if player.Backpack:FindFirstChild("Gun") then
 							return player
@@ -67,7 +64,7 @@ return function()
 
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
-				if player ~= getgenv().NebulaHub.Loaded["MM2"].private.findHero() then
+				if player ~= privatr.findHero() then
 					if player.Character then
 						if player:FindFirstChild("HumanoidRootPart") then
 							if player.Character:FindFirstChild("Gun") then
@@ -92,7 +89,7 @@ return function()
 		end
 	end
 
-	function getgenv().NebulaHub.Loaded["MM2"].private.findMurderer()
+	function privatr.findMurderer()
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
 				if player:FindFirstChild("Backpack") then
@@ -128,7 +125,7 @@ return function()
 		end
 	end
 
-	function getgenv().NebulaHub.Loaded["MM2"].private.getMap()
+	function privatr.getMap()
 		for _, possibleMap in ipairs(workspace:GetChildren()) do
 			if possibleMap:FindFirstChild("CoinContainer") and possibleMap:FindFirstChild("Spawns") then
 				return possibleMap
@@ -137,7 +134,7 @@ return function()
 		return nil
 	end
 
-	function getgenv().NebulaHub.Loaded["MM2"].private.fling(TargetPlayer)
+	function privatr.fling(TargetPlayer)
 		local Character = Player.Character
 		local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
 		local RootPart = Humanoid and Humanoid.RootPart
@@ -321,7 +318,7 @@ return function()
 		GlobalData.Connections["HookRoles"] = getgenv().Services.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
 			GlobalData.PlayerRoles = RoleData
 			GlobalData.ReloadESP:Fire()		
-			GlobalData.OriginalSheriff = getgenv().NebulaHub.Loaded["MM2"].private.findSheriff();		
+			GlobalData.OriginalSheriff = privatr.findSheriff();		
 		end)
 
 		GlobalData.Connections["RoundEnding"] = getgenv().Services.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("RoundEndFade", 5).OnClientEvent:Connect(function()
@@ -330,7 +327,8 @@ return function()
 		end)
 	end
 
-	print(getgenv().NebulaHub.Loaded["MM2"].private)
+	print(private)
+	getgenv().NebulaHub.Loaded["MM2"].private = private
 	
 	workspace.DescendantAdded:Connect(function(Child)
 		if Child.Name == "GunDrop" then
