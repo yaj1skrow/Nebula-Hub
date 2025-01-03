@@ -16,8 +16,11 @@ return function(Content)
 	local API_Save_PlayerChams = Readable["PlayerChams"]
 	local DefaultValue = false
 	if API_Save_PlayerChams ~= nil then
+		print("Init..ing Data")
+		print("PlayerChams", DefaultValue, API_Save_PlayerChams.Value) 
 		DefaultValue = API_Save_PlayerChams.Value or false
 	else
+		print("SavingNewData")
 		MM2Save:addBatch("PlayerChams", {
 				Value = false
 		})
