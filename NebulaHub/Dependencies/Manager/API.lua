@@ -55,4 +55,5 @@ end
 
 -- SEND API
 
+print("API RUNNING")
 getgenv().NebulaHub.API = NebulaHubAPI
