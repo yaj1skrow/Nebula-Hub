@@ -420,8 +420,8 @@ return function()
 				loadstring(game:HttpGet(Path..logicApi, false))()(MainContent)
 			end
 
-			Init()
-
 		end
 	end
+
+	Init()
 end
