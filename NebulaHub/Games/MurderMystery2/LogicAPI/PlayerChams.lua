@@ -10,7 +10,7 @@ local Storage = getgenv().NebulaHub.Storage
 
 local private = getgenv().NebulaHub.Loaded["MM2"].private
 local MM2Save = getgenv().NebulaHub.Loaded["MM2"].ConfigData
-local Readable = getgenv().NebulaHub.API.getGameConfig("MM2")
+local Readable = getgenv().NebulaHub.API.getGameConfig("MurderMystery2")
 
 return function(Content)
 	local API_Save_PlayerChams = Readable["PlayerChams"]
