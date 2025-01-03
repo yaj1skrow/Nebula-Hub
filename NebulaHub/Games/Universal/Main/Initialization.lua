@@ -29,7 +29,8 @@ return function()
 		print("Passed")
 		for val, logicApi in pairs(MainLogic) do
 			print("trying")
-			loadstring(game:HttpGet(logicApi, false))()(MainContent)
+			print(val)
+			loadstring(game:HttpGet(logicApi))()(MainContent)
 			print("PassedSecond")
 		end
 	end
