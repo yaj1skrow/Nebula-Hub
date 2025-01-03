@@ -8,6 +8,8 @@ local Character = Player.Character or Player.CharacterAdded:Wait();
 local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 local Storage = getgenv().NebulaHub.Storage
 
+local private = getgenv().NebulaHub.Loaded["MM2"].private
+
 return function(Content)
 Content:addUnit("Fling Target", Enums.UnitType.Dropdown, {
 		Initialize = function(Unit)
