@@ -1,19 +1,19 @@
-return function(_G)	
-local RunService = _G.Services.RunService;
-local TweenService = _G.Services.TweenService;
-local Players = _G.Services.Players;
+return function(getgenv())	
+local RunService = getgenv().Services.RunService;
+local TweenService = getgenv().Services.TweenService;
+local Players = getgenv().Services.Players;
 	
-local Enums = _G.NebulaHub.Dependencies.Manager.Enums;
-local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
+local Enums = getgenv().NebulaHub.Dependencies.Manager.Enums;
+local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
 	
-local Management = _G.NebulaHub.Dependencies.Manager.Management;
+local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
 
-local Player = _G.LocalPlayer;
+local Player = getgenv().LocalPlayer;
 local Character = Player.Character or Player.CharacterAdded:Wait();
 
-local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
+local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 
-local Storage = _G.NebulaHub.Storage
+local Storage = getgenv().NebulaHub.Storage
 	
 	local GlobalData = {
 	ESPs = {};
