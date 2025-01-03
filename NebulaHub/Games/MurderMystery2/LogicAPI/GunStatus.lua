@@ -8,6 +8,8 @@ local Character = Player.Character or Player.CharacterAdded:Wait();
 local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 local Storage = getgenv().NebulaHub.Storage
 
+local private = getgenv().NebulaHub.Loaded["MM2"].private
+
 return function(Content)
   Content:addUnit("GunStatus", Enums.UnitType.Info, {
 		Initialize = function(Unit)
@@ -19,6 +21,6 @@ return function(Content)
 				Unit.UiInfo.UnitTitle.Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
 			end)
 		end,
-		Text = `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
+		Text = workspace:FindFirstChild("GunDrop", true) and `<font color="rgb(110, 255, 139)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>true</b></font>` or `<font color="rgb(255, 82, 82)">Gun dropped:</font> <font family="rbxasset://fonts/families/Balthazar.json" color="rgb(255, 198, 15)"><b>false</b></font>` 
 	})
 end
