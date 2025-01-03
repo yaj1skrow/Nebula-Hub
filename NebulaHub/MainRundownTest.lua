@@ -1,6 +1,8 @@
 local LoadService = loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Dependencies/Manager/AllServices.lua", false))()
 getgenv().LocalPlayer = game:GetService("Players").LocalPlayer
 
+local LoadAPI = loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Dependencies/Manager/API.lua", false))()
+
 while task.wait() do
 	if getgenv().LocalPlayer.Character then
 		break
