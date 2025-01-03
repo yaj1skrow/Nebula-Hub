@@ -18,7 +18,7 @@ return function()
 
 	getgenv().NebulaHub.Loaded["Universal"].private = {}
 
-	MainLogic = {
+	local MainLogic = {
 		"https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua"
 	}
 
@@ -27,10 +27,7 @@ return function()
 
 	local function Init()
 		for val, logicApi in pairs(MainLogic) do
-      			local good, bad = pcall(function()
-					loadstring(game:HttpGet(logicApi, false))()(MainContent)
-				end)
-			if not good then print(bad) end
+      			loadstring(game:HttpGet(logicApi, false))()(MainContent)
     		end
 	end
 
