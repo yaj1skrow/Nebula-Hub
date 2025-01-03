@@ -10,6 +10,9 @@ end
 getgenv().NebulaHub = {
 	API = {};
 	MainUI = nil;
+	Loaded = {
+		
+	};
 	GlobalVars = {
 		
 	};
