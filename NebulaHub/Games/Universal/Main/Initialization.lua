@@ -11,13 +11,16 @@ return function()
 	local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
 
 	local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
-
+	
 	getgenv().NebulaHub.Loaded["Universal"] = {}
 
 	getgenv().NebulaHub.Loaded["Universal"].GlobalData = {}
 
 	getgenv().NebulaHub.Loaded["Universal"].private = {}
 
+	local UniversalDatasave = MainAPI.newGameConfig("Universal")
+	getgenv().NebulaHub.Loaded["Universal"].ConfigData = MainAPI.newGameConfig("Universal")
+	
 	local MainLogic = {
 		"Test.lua"
 	}
