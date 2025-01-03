@@ -1,36 +1,36 @@
 print("Running Management")
-print(_G.Services.RunService)
+print(getgenv().Services.RunService)
 print("Success")
 print("Main loading")
 
-local RunService = _G.Services.RunService;
-local TweenService = _G.Services.TweenService;
-local Players = _G.Services.Players;
+local RunService = getgenv().Services.RunService;
+local TweenService = getgenv().Services.TweenService;
+local Players = getgenv().Services.Players;
 
-local UserInputService = _G.Services.UserInputService
+local UserInputService = getgenv().Services.UserInputService
 
-local Slider = _G.NebulaHub.Dependencies.Services.Slider
+local Slider = getgenv().NebulaHub.Dependencies.Services.Slider
 
-print(_G.Services.RunService)
+print(getgenv().Services.RunService)
 
-local Assets = _G.NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
+local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 
-local Signal = _G.NebulaHub.Dependencies.Manager.Signal;
+local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
 
-local MainUI = _G.NebulaHub.MainUI.MainUI;
+local MainUI = getgenv().NebulaHub.MainUI.MainUI;
 
 local Contents = MainUI:WaitForChild("Content");
 
 local SideBar = Contents:WaitForChild("SideBar");
 local MainContents = Contents:WaitForChild("MainContents");
 
-print(_G.Services.RunService)
-print(_G.NebulaHub.MainUI)
+print(getgenv().Services.RunService)
+print(getgenv().NebulaHub.MainUI)
 
 local Management = {};
 Management.__index = Management;
 Management.Methods = {};
-Management.Enums = _G.NebulaHub.Dependencies.Manager.Enums
+Management.Enums = getgenv().NebulaHub.Dependencies.Manager.Enums
 local Enums = Management.Enums;
 local Methods = Management.Methods;
 Methods.__index = Methods;
@@ -67,8 +67,8 @@ local MoveTween = nil
 
 local Syntax = 0;
 
-_G.NebulaHub.GlobalVars.LoadedIn = Signal.new()
-local LoadedIn = _G.NebulaHub.GlobalVars.LoadedIn
+getgenv().NebulaHub.GlobalVars.LoadedIn = Signal.new()
+local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 
 --[[ Creator ]] do
 	function Management.initialize()
@@ -926,4 +926,4 @@ end;
 	end;
 end;
 
-_G.NebulaHub.Dependencies.Manager.Management = Management;
+getgenv().NebulaHub.Dependencies.Manager.Management = Management;
