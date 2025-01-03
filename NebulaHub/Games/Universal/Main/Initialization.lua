@@ -11,28 +11,12 @@ print("Loaded Universal")
   local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
   	
   local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
-  	
-   getgenv().NebulaHub.Loaded["MM2"].GlobalData = {
-    	ESPs = {};
-    	GunESP = {};
-    	TrapESP = {};
-    	OriginalSheriff = nil;
-    	PlayerRoles = nil;
-    	Connections = {};
-    	PlayerWalkspeed = getgenv().LocalPlayer.Character:FindFirstChild("Humanoid").WalkSpeed;
-    	PlayerJumppower = getgenv().LocalPlayer.Character:FindFirstChild("Humanoid").JumpPower;
-    	ReloadESP = Signal.new();
-    	ChamTypeChanged = Signal.new();
-    	FlingTarget = nil;
-    	CoinsESP = {};
-    	GunDropped = Signal.new();
-    	GunTook = Signal.new();
-    	ChamType = "Box";
-    	InRound = true;
-    	GunGetDeb = false;
-  }
+
+getgenv().NebulaHub.Loaded["Universal"] = {}
+	
+   getgenv().NebulaHub.Loaded["Universal"].GlobalData = {}
   
-   getgenv().NebulaHub.Loaded["MM2"].private = {}
+   getgenv().NebulaHub.Loaded["Universal"].private = {}
 
   MainLogic = {
     "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/PlayerChams.lua"
