@@ -1,4 +1,4 @@
-_G.NebulaHub.Dependencies.Manager.Enums = {
+getgenv().NebulaHub.Dependencies.Manager.Enums = {
 	["UnitType"] = {
 		["Switch"] = {
 			["Value"] = 0;
