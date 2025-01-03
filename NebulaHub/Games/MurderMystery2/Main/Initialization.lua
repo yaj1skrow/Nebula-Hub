@@ -9,7 +9,9 @@ return function()
   local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
   	
   local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
-  	
+
+getgenv().NebulaHub.Loaded["MM2"] = {}
+	
    getgenv().NebulaHub.Loaded["MM2"].GlobalData = {
     	ESPs = {};
     	GunESP = {};
