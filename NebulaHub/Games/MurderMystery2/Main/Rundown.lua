@@ -310,7 +310,7 @@ function private.fling(TargetPlayer)
 		until (RootPart.Position - data.OldPos.p).Magnitude < 25
 		workspace.FallenPartsDestroyHeight = data.FPDH
 	else
-		Management:notice(Enums.NoticeType.Alert, 3,"Player might have died, target player has no character.", "ERROR")
+		Management:notice(Enums.NoticeType.Alert, 3,"You might have died, you have no character.", "ERROR")
 	end
 end
 
@@ -330,6 +330,12 @@ end
 workspace.DescendantAdded:Connect(function(Child)
 	if Child.Name == "GunDrop" then
 		GlobalData.GunDropped:Fire(Child)
+	end
+end)
+
+	workspace.DescendantRemoving:Connect(function(child)
+	if child.Name == "GunDrop" then
+		GlobalData.GunTook:Fire();
 	end
 end)
 
@@ -620,15 +626,12 @@ Management.newContent("Game")
 				end
 			end)
 
-			GlobalData.Connections["GunRemoval"] = workspace.DescendantRemoving:Connect(function(Child)
-				if Child.Name == "GunDrop" then
-					GlobalData.GunTook:Fire()
-					--if GlobalData.GunGetting == true then
-					GlobalData.ReloadESP:Fire()
-					--end
-					for i, v in pairs(GlobalData.GunESP) do
-						v:Destroy()
-					end
+			GlobalData.Connections["GunRemoval"] = GlobalData.GunTook:Connect(function(Child)
+				--if GlobalData.GunGetting == true then
+				GlobalData.ReloadESP:Fire()
+				--end
+				for i, v in pairs(GlobalData.GunESP) do
+					v:Destroy()
 				end
 			end)
 		end,
@@ -852,92 +855,7 @@ Management.newContent("Game")
 	:addWindowSubtitle("Innocent")
 	:addUnit("Get Dropped Gun", Enums.UnitType.Toggle, {
 		onActivated = function(Unit, Value)
-			if GlobalData["GunGetDeb"] == true then
-				return
-			end
-			if Character then
-				if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
-				local FindGun = private.getMap():FindFirstChild("GunDrop")
-				local GunFetchedSuccess = false
-				local CancelGunFetch = false
-
-				if FindGun then
-					GlobalData["GunGetDeb"] = true
-					local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
-					local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
-					Character:WaitForChild("HumanoidRootPart").Anchored = true;
-					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
-					Character.PrimaryPart.CFrame = FindGun:GetPivot()
-					task.delay(3, function()
-						if GunFetchedSuccess == false then
-							CancelGunFetch = true
-						end
-					end)
-					Player.Backpack.ChildAdded:Connect(function(child)
-						if child:IsA("Tool") and child.Name == "Gun" then
-							GunFetchedSuccess = true
-						end
-					end)
-					repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
-					if CancelGunFetch then
-						Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
-					end
-					Character.PrimaryPart.CFrame = KeptOriginalCFrame
-					Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
-					Character:WaitForChild("HumanoidRootPart").Anchored = false;
-					Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
-					GlobalData["GunGetDeb"] = false
-				else
-					Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed.", "ERROR")
-				end
-			end
-		end,
-		cooldown = 0.2,
-	}, "Top")
-	:addUnit("Auto Grab Gun", Enums.UnitType.Switch, {
-		onActivated = function()
-			if GlobalData["GunGetDeb"] == true then
-				return
-			end
-			if Character then
-				if private.getMap() ~= nil then
-					local FindGun = private.getMap():FindFirstChild("GunDrop")
-					local GunFetchedSuccess = false
-					local CancelGunFetch = false
-
-					if FindGun then
-						GlobalData["GunGetDeb"] = true
-						local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
-						local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
-						Character:WaitForChild("HumanoidRootPart").Anchored = true;
-						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
-						Character:PivotTo(FindGun:GetPivot())
-						task.delay(3, function()
-							if GunFetchedSuccess == false then
-								CancelGunFetch = true
-							end
-						end)
-						Player.Backpack.ChildAdded:Connect(function(child)
-							if child:IsA("Tool") and child.Name == "Gun" then
-								GunFetchedSuccess = true
-							end
-						end)
-						repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
-						if CancelGunFetch then
-							Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
-						end
-						Character:PivotTo(KeptOriginalCFrame)
-						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
-						Character:WaitForChild("HumanoidRootPart").Anchored = false;
-						Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
-						GlobalData["GunGetDeb"] = false
-					else
-						Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed. Will automatically teleport you when found.", "ERROR")
-					end
-				end
-			end
-
-			GlobalData.Connections["GunGrabber"] = GlobalData.GunDropped:Connect(function(gunDrop)
+			if GlobalData["GunGetDeb"] == false then
 				if Character then
 					if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
 					local FindGun = private.getMap():FindFirstChild("GunDrop")
@@ -945,11 +863,12 @@ Management.newContent("Game")
 					local CancelGunFetch = false
 
 					if FindGun then
+						GlobalData["GunGetDeb"] = true
 						local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
-						local KeptOriginalC0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0
+						local KeptOriginalC1 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1
 						Character:WaitForChild("HumanoidRootPart").Anchored = true;
-						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 * CFrame.new(0,-10,0)
-						Character:PivotTo(FindGun:GetPivot())
+						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = CFrame.new(0,10,0)
+						Character.PrimaryPart.CFrame = CFrame.new(FindGun:GetPivot().Position)
 						task.delay(3, function()
 							if GunFetchedSuccess == false then
 								CancelGunFetch = true
@@ -964,15 +883,96 @@ Management.newContent("Game")
 						if CancelGunFetch then
 							Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
 						end
-						Character:PivotTo(KeptOriginalCFrame)
-						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C0 = KeptOriginalC0
+						Character.PrimaryPart.CFrame = KeptOriginalCFrame
+						Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = KeptOriginalC1
 						Character:WaitForChild("HumanoidRootPart").Anchored = false;
 						Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
+						GlobalData["GunGetDeb"] = false
 					else
 						Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed.", "ERROR")
 					end
 				end
-			end)
+			end
+		end,
+		cooldown = 0.2,
+	}, "Top")
+	:addUnit("Auto Grab Gun", Enums.UnitType.Switch, {
+		onActivated = function()
+			if GlobalData["GunGetDeb"] == false then
+				if Character then
+					if private.getMap() ~= nil then
+						local FindGun = private.getMap():FindFirstChild("GunDrop")
+						local GunFetchedSuccess = false
+						local CancelGunFetch = false
+
+						if FindGun then
+							GlobalData["GunGetDeb"] = true
+							local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
+							local KeptOriginalC1 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1
+							Character:WaitForChild("HumanoidRootPart").Anchored = true;
+							Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = CFrame.new(0,10,0)
+							Character.PrimaryPart.CFrame = CFrame.new(FindGun:GetPivot().Position)
+							task.delay(3, function()
+								if GunFetchedSuccess == false then
+									CancelGunFetch = true
+								end
+							end)
+							Player.Backpack.ChildAdded:Connect(function(child)
+								if child:IsA("Tool") and child.Name == "Gun" then
+									GunFetchedSuccess = true
+								end
+							end)
+							repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
+							if CancelGunFetch then
+								Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
+							end
+							Character:PivotTo(KeptOriginalCFrame)
+							Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = KeptOriginalC1
+							Character:WaitForChild("HumanoidRootPart").Anchored = false;
+							Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
+							GlobalData["GunGetDeb"] = false
+						else
+							Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed. Will automatically teleport you when found.", "ERROR")
+						end
+					end
+				end
+				GlobalData.Connections["GunGrabber"] = GlobalData.GunDropped:Connect(function(gunDrop)
+					if Character then
+						if private.getMap() == nil then Management:notice(Enums.NoticeType.Alert, 3, "Round not started, action can not be completed.", "NO ROUND") return end
+						local FindGun = private.getMap():FindFirstChild("GunDrop")
+						local GunFetchedSuccess = false
+						local CancelGunFetch = false
+
+						if FindGun then
+							local KeptOriginalCFrame = Character:WaitForChild("HumanoidRootPart").CFrame
+							local KeptOriginalC1 = Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1
+							Character:WaitForChild("HumanoidRootPart").Anchored = true;
+							Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = CFrame.new(0,10,0)
+							Character.PrimaryPart.CFrame = CFrame.new(FindGun:GetPivot().Position)
+							task.delay(3, function()
+								if GunFetchedSuccess == false then
+									CancelGunFetch = true
+								end
+							end)
+							Player.Backpack.ChildAdded:Connect(function(child)
+								if child:IsA("Tool") and child.Name == "Gun" then
+									GunFetchedSuccess = true
+								end
+							end)
+							repeat task.wait(0.1) until GunFetchedSuccess == true or CancelGunFetch == true
+							if CancelGunFetch then
+								Management:notice(Enums.NoticeType.Alert, 3, "Un unknown error occured when fetching gun.", "UNKNOWN ERROR")
+							end
+							Character:PivotTo(KeptOriginalCFrame)
+							Character:WaitForChild("LowerTorso"):WaitForChild("Root").C1 = KeptOriginalC1
+							Character:WaitForChild("HumanoidRootPart").Anchored = false;
+							Character:FindFirstChild("Humanoid"):ChangeState("GettingUp")
+						else
+							Management:notice(Enums.NoticeType.Alert, 3, "No gun found anywhere, action not completed.", "ERROR")
+						end
+					end
+				end)
+			end
 		end,
 		onDeactivated = function()
 			if GlobalData.Connections["GunGrabber"] ~= nil then
