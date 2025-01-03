@@ -33,6 +33,8 @@ return function()
 	}
 
 	getgenv().NebulaHub.Loaded["MM2"].private = {}
+	
+	local GlobalData = getgenv().NebulaHub.Loaded["MM2"].GlobalData
 
 	function getgenv().NebulaHub.Loaded["MM2"].private.findHero()
 		if GlobalData.PlayerRoles then
@@ -343,7 +345,7 @@ return function()
 	local MainLogic = {
 		{
 			Add = "Subtitle";
-			Value = "Chams;
+			Value = "Chams";
 		};
 		"PlayerChams.lua";
 		"DroppedGunCham.lua";
@@ -358,7 +360,7 @@ return function()
 		"SpacialLine";
 		{
 			Add = "Subtitle";
-			Value = "Innocent;
+			Value = "Innocent";
 		};
 		"GetDroppedGun.lua";
 		"AutoGrabGun.lua";
@@ -388,14 +390,14 @@ return function()
 		};
 		"Fling.lua";
 		"Spacial";
-		
+
 	}
 
 	local MainContent = Management.newContent("Game")
 	MainContent:setSideButtonTitle("MM2")
-	:addWindowTitle("Visual")
-	:addSpacialLine()
-	
+		:addWindowTitle("Visual")
+		:addSpacialLine()
+
 	local function Init()
 		print("test?")
 		for val, logicApi in pairs(MainLogic) do
