@@ -1,4 +1,6 @@
 return function()
+	print("Loaded MM2")
+
 	local MainAPI = getgenv().NebulaHub.API
 
 	local RunService = getgenv().Services.RunService;
@@ -35,7 +37,7 @@ return function()
 	local GlobalData = getgenv().NebulaHub.Loaded["MM2"].GlobalData
 	local private = {}
 	
-	function privatr.findHero()
+	function private.findHero()
 		if GlobalData.PlayerRoles then
 			for player, data in GlobalData.PlayerRoles do
 				if data.Role == "Hero" then
@@ -49,10 +51,10 @@ return function()
 		end
 	end
 
-	function privatr.findSheriff()
+	function private.findSheriff()
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
-				if player ~= privatr.findHero() then
+				if player ~= private.findHero() then
 					if player:FindFirstChild("Backpack") then
 						if player.Backpack:FindFirstChild("Gun") then
 							return player
@@ -64,7 +66,7 @@ return function()
 
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
-				if player ~= privatr.findHero() then
+				if player ~= private.findHero() then
 					if player.Character then
 						if player:FindFirstChild("HumanoidRootPart") then
 							if player.Character:FindFirstChild("Gun") then
@@ -89,7 +91,7 @@ return function()
 		end
 	end
 
-	function privatr.findMurderer()
+	function private.findMurderer()
 		for i, player in pairs(getgenv().Services.Players:GetPlayers()) do
 			if player then
 				if player:FindFirstChild("Backpack") then
@@ -125,7 +127,7 @@ return function()
 		end
 	end
 
-	function privatr.getMap()
+	function private.getMap()
 		for _, possibleMap in ipairs(workspace:GetChildren()) do
 			if possibleMap:FindFirstChild("CoinContainer") and possibleMap:FindFirstChild("Spawns") then
 				return possibleMap
@@ -134,7 +136,7 @@ return function()
 		return nil
 	end
 
-	function privatr.fling(TargetPlayer)
+	function private.fling(TargetPlayer)
 		local Character = Player.Character
 		local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
 		local RootPart = Humanoid and Humanoid.RootPart
@@ -318,7 +320,7 @@ return function()
 		GlobalData.Connections["HookRoles"] = getgenv().Services.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("PlayerDataChanged", 5).OnClientEvent:Connect(function(RoleData)
 			GlobalData.PlayerRoles = RoleData
 			GlobalData.ReloadESP:Fire()		
-			GlobalData.OriginalSheriff = privatr.findSheriff();		
+			GlobalData.OriginalSheriff = private.findSheriff();		
 		end)
 
 		GlobalData.Connections["RoundEnding"] = getgenv().Services.ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Gameplay"):WaitForChild("RoundEndFade", 5).OnClientEvent:Connect(function()
