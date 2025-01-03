@@ -26,9 +26,14 @@ getgenv().NebulaHub.Loaded["Universal"] = {}
 MainContent:setSideButtonTitle("Universal")
 
   local function Init()
+		print(MainLogic[1])
+		 loadstring(game:HttpGet(MainLogic[1], false))()(MainContent)
+		print("Passed")
     for val, logicApi in pairs(MainLogic) do
-      loadstring(game:HttpGet(logicApi, false))()(MainContent)
-    end
+     		print("trying")
+ loadstring(game:HttpGet(logicApi, false))()(MainContent)
+   		print("PassedSecond")
+ end
   end
 
   Init()
