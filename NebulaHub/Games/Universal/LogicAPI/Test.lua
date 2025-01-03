@@ -1,3 +1,8 @@
+print(getgenv().NebulaHub)
+print(getgenv().NebulaHub.Dependencies)
+print(getgenv().NebulaHub.Loaded["Universal"])
+print(getgenv().NebulaHub.Loaded["Universal"].GlobalData)
+
 local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal
 local Enums = getgenv().NebulaHub.Dependencies.Manager.Enums
 local GlobalData = getgenv().NebulaHub.Loaded["Universal"].GlobalData
