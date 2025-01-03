@@ -32,7 +32,7 @@ return function()
 			print(Path..logicApi)
 			print(Path)
 			print(logicApi)
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/"..logicApi, false))()(MainContent)
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/Test.lua", false))()(MainContent)
 			print("ran")
     		end
 	end
