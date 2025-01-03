@@ -429,6 +429,17 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 			end)
 		end
 	end
+	
+	function Management.finish()
+		for i, asset in pairs(Assets:GetChildren()) do
+			if asset:GetAttribute("Kept") then
+			else
+				asset:Destroy()
+			end
+		end
+		
+		Assets.Name = ""
+	end
 end;
 
 --[[ Methods ]] do
@@ -549,13 +560,17 @@ end;
 				if MainUnit.TurnedOn == false then
 					MainUnit.TurnedOn = true;
 
-					Data.onDeactivated(MainUnit, false);
+					if Data.onDeactivated then
+						Data.onDeactivated(MainUnit, false);
+					end
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(50, 64, 126), Position = UDim2.fromScale(0.2,0.5)}):Play()
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView.Up, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(101, 129, 255)}):Play()
 				else
 					MainUnit.TurnedOn = false;
 
-					Data.onActivated(MainUnit, true);
+					if Data.onActivated then
+						Data.onActivated(MainUnit, true);
+					end
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(62, 111, 58), Position = UDim2.fromScale(0.8,0.5)}):Play()
 					TweenService:Create(newSwitchAction.Action.MainSwitch.SwitchButtonView.Up, TweenInfo.new(0.2, Enum.EasingStyle.Back), {BackgroundColor3 = Color3.fromRGB(142, 255, 134)}):Play()
 				end;
@@ -568,7 +583,7 @@ end;
 					Run()
 					MainUnit.OnValueChanged:Fire(MainUnit.TurnedOn)
 					MainUnit.Debounce = true;
-					task.wait(Data.cooldown)
+					task.wait(Data.cooldown or 0.1)
 					MainUnit.Debounce = false;
 				end
 			end);
@@ -610,8 +625,10 @@ end;
 			local MainUnit = Units[UnitName]
 
 			local function Run()
-				newStringAction.Action.MainString.TextBox.Text = MainUnit.InitialValue;
-				Data.onEntered(MainUnit, MainUnit.InitialValue);
+				newStringAction.Action.MainString.TextBox.Text = MainUnit.InitialValue or "";
+				if Data.onEntered then
+					Data.onEntered(MainUnit, MainUnit.InitialValue or "");
+				end
 			end
 
 			Run()
@@ -622,7 +639,7 @@ end;
 					Run()
 					MainUnit.OnValueChanged:Fire(MainUnit.InitialValue)
 					MainUnit.Debounce = true
-					task.wait(Data.cooldown);
+					task.wait(Data.cooldown or 0.1);
 					MainUnit.Debounce = false;
 				end;
 			end);
@@ -661,9 +678,11 @@ end;
 			newDropdownAction:WaitForChild("Action"):WaitForChild("DropdownInt"):WaitForChild("Container"):WaitForChild("DropdownMenu")
 
 			local CreatedEnums = {};
-			Data.createEnums(function(EnumItems : {})
-				CreatedEnums = EnumItems;
-			end);
+			if Data.createEnums then
+				Data.createEnums(function(EnumItems : {})
+					CreatedEnums = EnumItems;
+				end);
+			end
 
 			Units[UnitName] = {
 				Data = Data;
@@ -702,7 +721,7 @@ end;
 						for i, v in pairs(CreatedEnums) do
 							local newDropEnum = Assets:WaitForChild("DropdownOption"):Clone();
 							newDropEnum.DropdownTitle.Text = v.Name;
-							newDropEnum.DropdownTitle.TextColor3 = v.Color;
+							newDropEnum.DropdownTitle.TextColor3 = v.Color or Color3.fromRGB(255,255,255);
 							newDropEnum.Parent = newDropdownAction.Action.DropdownInt.Container.DropdownMenu;
 							newDropEnum.Visible = true;
 
@@ -747,7 +766,7 @@ end;
 							newDropdownAction.Action.DropdownInt.Container.Visible = false;
 						end);
 					end;
-					task.delay(0.3 + Data.cooldown, function()
+					task.delay(0.3 + Data.cooldown or 0.1, function()
 						MainUnit.Debounce = false;
 					end)
 				end;
@@ -779,7 +798,7 @@ end;
 			
 			local NewSliderSystem = Slider.new(newSliderAction.Action.SliderBase, {
 				SliderData = {
-					Start = Data.Min, End = Data.Max, Increment = Data.Increment
+					Start = Data.Min or 0, End = Data.Max or 50, Increment = Data.Increment or 1, DefaultValue = Data.defaultValue or Data.Min
 				};
 				MoveInfo = TweenInfo.new(0.1, Enum.EasingStyle.Quint);
 			});
@@ -856,7 +875,9 @@ end;
 			local MainUnit = Units[UnitName]
 
 			local function Run()
-				Data.onActivated(MainUnit, true);
+				if Data.onActivated then
+					Data.onActivated(MainUnit, true);
+				end
 			end
 
 			MainUnit.Connections["Toggled"] = newToggleAction.Action.Activator.Activated:Connect(function()
@@ -864,7 +885,7 @@ end;
 					Run()
 					MainUnit.Toggled:Fire(MainUnit.TurnedOn)
 					MainUnit.Debounce = true;
-					task.wait(Data.cooldown)
+					task.wait(Data.cooldown or 0.1)
 					MainUnit.Debounce = false;
 				end
 			end);
