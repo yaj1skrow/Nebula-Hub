@@ -344,6 +344,9 @@ return function()
 		end
 	end)
 
+	local MM2Datasave = MainAPI.newGameConfig("MurderMystery2")
+	getgenv().NebulaHub.Loaded["Universal"].ConfigData = MM2Datasave
+	
 	local Path = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/"
 
 	local MainLogic = {
