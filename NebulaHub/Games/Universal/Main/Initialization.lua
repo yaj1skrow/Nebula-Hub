@@ -18,10 +18,8 @@ return function()
 
 	getgenv().NebulaHub.Loaded["Universal"].private = {}
 
-	local Path = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/"
-
 	local MainLogic = {
-		"Test.lua"
+		"https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua"
 	}
 
 	local MainContent = Management.newContent("Universal")
@@ -29,11 +27,7 @@ return function()
 
 	local function Init()
 		for val, logicApi in pairs(MainLogic) do
-			print(Path..logicApi)
-			print(Path)
-			print(logicApi)
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/MurderMystery2/LogicAPI/Test.lua", false))()(MainContent)
-			print("ran")
+			loadstring(game:HttpGet(logicApi, false))()(MainContent)
     		end
 	end
 
