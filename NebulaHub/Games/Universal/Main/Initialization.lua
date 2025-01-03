@@ -19,7 +19,7 @@ return function()
 	getgenv().NebulaHub.Loaded["Universal"].private = {}
 
 	local UniversalDatasave = MainAPI.newGameConfig("Universal")
-	getgenv().NebulaHub.Loaded["Universal"].ConfigData = MainAPI.newGameConfig("Universal")
+	getgenv().NebulaHub.Loaded["Universal"].ConfigData = UniversalDatasave
 
 	local Path = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/"
 	
