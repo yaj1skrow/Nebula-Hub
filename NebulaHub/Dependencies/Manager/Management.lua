@@ -1,31 +1,17 @@
-print("Running Management")
-print(getgenv().Services.RunService)
-print("Success")
-print("Main loading")
-
 local RunService = getgenv().Services.RunService;
 local TweenService = getgenv().Services.TweenService;
 local Players = getgenv().Services.Players;
 
 local UserInputService = getgenv().Services.UserInputService
-
 local Slider = getgenv().NebulaHub.Dependencies.Services.Slider
 
-print(getgenv().Services.RunService)
-
 local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
-
 local Signal = getgenv().NebulaHub.Dependencies.Manager.Signal;
-
 local MainUI = getgenv().NebulaHub.MainUI.MainUI;
-
 local Contents = MainUI:WaitForChild("Content");
 
 local SideBar = Contents:WaitForChild("SideBar");
 local MainContents = Contents:WaitForChild("MainContents");
-
-print(getgenv().Services.RunService)
-print(getgenv().NebulaHub.MainUI)
 
 local Management = {};
 Management.__index = Management;
@@ -331,7 +317,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -346,7 +332,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 		elseif NoticeType == Enums.NoticeType.Alert then
@@ -377,7 +363,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -392,7 +378,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 		elseif NoticeType == Enums.NoticeType.Notification then
@@ -423,7 +409,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -438,7 +424,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					game:GetService("Debris"):AddItem(newNotice, 3.6)
+					getgenv().Services.Debris:AddItem(newNotice, 3.6)
 				end
 			end)
 		end
