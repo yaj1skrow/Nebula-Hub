@@ -1,4 +1,6 @@
 return function()
+print("Loaded Universal")
+	
   local MainAPI = getgenv().NebulaHub.API
   	
   local RunService = getgenv().Services.RunService;
@@ -37,7 +39,7 @@ return function()
   }
 
  local MainContent = Management.newContent("Universal")
-	MainContent:setSideButtonTitle("Universal")
+MainContent:setSideButtonTitle("Universal")
 
   local function Init()
     for _, logicApi in pairs(MainLogic) do
