@@ -345,7 +345,6 @@ return function()
 			Add = "Subtitle";
 			Value = "Chams;
 		};
-		"Spacial";
 		"PlayerChams.lua";
 		"DroppedGunCham.lua";
 		"TrapChams.lua";
@@ -361,8 +360,35 @@ return function()
 			Add = "Subtitle";
 			Value = "Innocent;
 		};
+		"GetDroppedGun.lua";
+		"AutoGrabGun.lua";
+		"GunStatus.lua";
 		"Spacial";
-		"GetDroppedGun.lua
+		{
+			Add = "Subtitle";
+			Value = "Murderer";
+		};
+		"KillEveryone.lua";
+		"Spacial";
+		{
+			Add = "Subtitle";
+			Value = "Misc";
+		};
+		"Walkspeed.lua";
+		"Jumppower.lua";
+		"Spacial";
+		{
+			Add = "Title";
+			Value = "Trolling";
+		};
+		"SpacialLine";
+		{
+			Add = "Subtitle";
+			Value = "Fling";
+		};
+		"Fling.lua";
+		"Spacial";
+		
 	}
 
 	local MainContent = Management.newContent("Game")
@@ -382,6 +408,8 @@ return function()
 				elseif logicApi.Add == "Title" then
 					MainContent:addWindowTitle(logicApi.Value)
 				end
+			else
+				loadstring(game:HttpGet(Path..logicApi, false))()(MainContent)
 			end
 
 			Init()
