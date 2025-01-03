@@ -41,7 +41,7 @@ return function()
 
   local function Init()
     for _, logicApi in pairs(MainLogic) do
-      game:HttpGet(logicApi, false)()(MainContent)
+      loadstring(game:HttpGet(logicApi, false))()(MainContent)
     end
   end
 
