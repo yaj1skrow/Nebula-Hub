@@ -9,6 +9,8 @@ local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForCh
 local Storage = getgenv().NebulaHub.Storage
 
 return function(Content)
+  print("ran test.lua, and also:")
+  print(Content)
   Content:addUnit("Test", Enums.UnitType.Info, {
       Text = "If you can see this, it means that it worked.";
       Initialize = function()
