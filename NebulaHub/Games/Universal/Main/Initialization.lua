@@ -12,7 +12,9 @@ return function()
 
 	local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
 	
-	getgenv().NebulaHub.Loaded["Universal"] = {}
+	getgenv().NebulaHub.Loaded["Universal"] = {
+		ConfigData = {}
+	}
 
 	getgenv().NebulaHub.Loaded["Universal"].GlobalData = {}
 
