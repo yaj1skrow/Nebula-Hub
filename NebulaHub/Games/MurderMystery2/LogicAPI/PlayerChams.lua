@@ -14,17 +14,7 @@ local Readable = getgenv().NebulaHub.API.getGameConfig("MurderMystery2")
 
 return function(Content)
 	local API_Save_PlayerChams = Readable["PlayerChams"]
-	local DefaultValue = false
-	if API_Save_PlayerChams ~= nil then
-		print("Init..ing Data")
-		print("PlayerChams", DefaultValue, API_Save_PlayerChams.Value) 
-		DefaultValue = API_Save_PlayerChams.Value or false
-	else
-		print("SavingNewData")
-		MM2Save:addBatch("PlayerChams", {
-				Value = false
-		})
-	end
+	local DefaultValue = API_Save_PlayerChams.Value or false
  	Content:addUnit("Player Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
 			MM2Save:addBatch("PlayerChams", {
