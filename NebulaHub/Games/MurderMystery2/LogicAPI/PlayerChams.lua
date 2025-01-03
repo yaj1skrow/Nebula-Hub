@@ -16,9 +16,15 @@ return function(Content)
 	local API_Save_PlayerChams = Readable["PlayerChams"]
 	local DefaultValue = false
 	if API_Save_PlayerChams then
+		print("DATA FOUND")
 		DefaultValue = API_Save_PlayerChams.Value
 	else
+		print("DATA NOT FOUND")
 		DefaultValue = false
+		MM2Save:addBatch("PlayerChams", {
+			Value = true
+		})
+		print("CREATED DATA")
 	end
  	Content:addUnit("Player Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
