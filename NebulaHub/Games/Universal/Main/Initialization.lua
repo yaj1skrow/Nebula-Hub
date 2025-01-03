@@ -29,8 +29,7 @@ return function()
 		print("Passed")
 		for val, logicApi in pairs(MainLogic) do
 			print("trying")
-			print(val)
-			loadstring(game:HttpGet(logicApi))()(MainContent)
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua", false))()(MainContent)
 			print("PassedSecond")
 		end
 	end
