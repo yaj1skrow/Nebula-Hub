@@ -29,8 +29,8 @@ return function()
 		for val, logicApi in pairs(MainLogic) do
       			local good, bad = pcall(function()
 					loadstring(game:HttpGet(logicApi, false))()(MainContent)
-				end
-				if not good then print(bad) end
+				end)
+			if not good then print(bad) end
     		end
 	end
 
