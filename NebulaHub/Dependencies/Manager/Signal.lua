@@ -110,4 +110,4 @@ function Signal:Destroy()
 	table.clear(self.connections);
 end
 
-_G.NebulaHub.Dependencies.Manager.Signal = Signal;
+getgenv().NebulaHub.Dependencies.Manager.Signal = Signal;
