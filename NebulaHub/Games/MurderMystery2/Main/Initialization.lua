@@ -33,6 +33,8 @@ return function()
 	}
 
 	getgenv().NebulaHub.Loaded["MM2"].private = {}
+
+	print(getgenv().NebulaHub.Loaded["MM2"])
 	
 	local GlobalData = getgenv().NebulaHub.Loaded["MM2"].GlobalData
 	local private = getgenv().NebulaHub.Loaded["MM2"].private
