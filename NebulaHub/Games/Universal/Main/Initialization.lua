@@ -19,14 +19,14 @@ getgenv().NebulaHub.Loaded["Universal"] = {}
    getgenv().NebulaHub.Loaded["Universal"].private = {}
 
   MainLogic = {
-    "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua"
+    [1] = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/Test.lua"
   }
 
  local MainContent = Management.newContent("Universal")
 MainContent:setSideButtonTitle("Universal")
 
   local function Init()
-    for _, logicApi in pairs(MainLogic) do
+    for val, logicApi in pairs(MainLogic) do
       loadstring(game:HttpGet(logicApi, false))()(MainContent)
     end
   end
