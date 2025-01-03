@@ -12,7 +12,9 @@ return function()
 
 	local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
 
-	getgenv().NebulaHub.Loaded["MM2"] = {}
+	getgenv().NebulaHub.Loaded["MM2"] = {
+		ConfigData = {}
+	}
 
 	getgenv().NebulaHub.Loaded["MM2"].GlobalData = {
 		ESPs = {};
