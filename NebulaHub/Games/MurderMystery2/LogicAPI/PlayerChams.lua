@@ -9,10 +9,24 @@ local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForCh
 local Storage = getgenv().NebulaHub.Storage
 
 local private = getgenv().NebulaHub.Loaded["MM2"].private
+local MM2Save = getgenv().NebulaHub.Loaded["MM2"].ConfigData
+local Readable = getgenv().NebulaHub.API.getGameConfig("MM2")
 
 return function(Content)
-  Content:addUnit("Player Chams", Enums.UnitType.Switch, {
+	local API_Save_PlayerChams = Readable["PlayerChams"]
+	local DefaultValue = false
+	if API_Save_PlayerChams ~= nil then
+		DefaultValue = API_Save_PlayerChams.Value or false
+	else
+		MM2Save:addBatch("PlayerChams", {
+				Value = false
+		})
+	end
+ 	Content:addUnit("Player Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
+			MM2Save:addBatch("PlayerChams", {
+				Value = true
+			})
 			local function createEsp(Player_)
 				if GlobalData.ChamType == "Highlight" then
 					task.spawn(function()
@@ -204,6 +218,9 @@ return function(Content)
 			end)
 		end,
 		onDeactivated = function(MainUnit, Value)
+			MM2Save:addBatch("PlayerChams", {
+				Value = false
+			})
 			if GlobalData.Connections["Reset"] ~= nil then
 				GlobalData.Connections["Reset"]:Disconnect();
 			end
@@ -226,7 +243,7 @@ return function(Content)
 				esp:Destroy();
 			end;
 		end,
-		defaultValue = false,
+		defaultValue = DefaultValue,
 		cooldown = 0.2,
 	}, "Top")
 end
