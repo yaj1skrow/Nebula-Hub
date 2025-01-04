@@ -27,7 +27,10 @@ NebulaHubAPI.Configuration = {
 		self.ConfigPath = self.GameStringPath.."/".."gameConfigs.txt"
 
 		makefolder(self.GameStringPath);
-		writefile(self.ConfigPath, getgenv().Services.HttpService:JSONEncode(self.GameConfig))
+		if isfile(self.ConfigPath) then
+		else
+			writefile(self.ConfigPath, getgenv().Services.HttpService:JSONEncode(self.GameConfig))
+		end
 
 		NebulaHubAPI.Configuration.GamePath[self.GamePath] = {
 			GameConfig = self.GameConfig
