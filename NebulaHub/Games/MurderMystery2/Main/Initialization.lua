@@ -12,6 +12,8 @@ return function()
 
 	local Management = getgenv().NebulaHub.Dependencies.Manager.Management;
 
+	local Player = getgenv().LocalPlayer
+	
 	getgenv().NebulaHub.Loaded["MM2"] = {
 		ConfigData = {}
 	}
