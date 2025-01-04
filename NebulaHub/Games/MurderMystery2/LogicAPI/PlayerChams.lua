@@ -8,7 +8,10 @@ local Character = Player.Character or Player.CharacterAdded:Wait();
 local Assets = getgenv().NebulaHub.MainUI:WaitForChild("Dependencies"):WaitForChild("Assets");
 local Storage = getgenv().NebulaHub.Storage
 
+local Management = getgenv().NebulaHub.Dependencies.Manager.Management
+
 local private = getgenv().NebulaHub.Loaded["MM2"].private
+
 local MM2Save = getgenv().NebulaHub.Loaded["MM2"].ConfigData
 local Readable = getgenv().NebulaHub.API.getGameConfig("MurderMystery2")
 
