@@ -15,7 +15,7 @@ local private = getgenv().NebulaHub.Loaded["Universal"].private
 local UniversalSave = getgenv().NebulaHub.Loaded["Universal"].ConfigData
 local Readable = getgenv().NebulaHub.API.getGameConfig("Universal")
 
-print(Readable)
+print(Readable.TestValue or "uh?")
 
 return function(Content)
 	local API_Save_TestSave = Readable.TestValue
