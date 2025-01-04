@@ -30,7 +30,7 @@ getgenv().NebulaHub = {
 
 local LoadAPI = loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Dependencies/Manager/API.lua", false))()
 
-local NewNebulaHub = game:GetObjects("rbxassetid://133070117920687")[1].NebulaHub
+local NewNebulaHub = game:GetObjects("rbxassetid://77426361425256")[1].NebulaHub
 local hider = get_hidden_gui or gethui
 NewNebulaHub.Parent = hider()
 getgenv().NebulaHub.MainUI = NewNebulaHub
