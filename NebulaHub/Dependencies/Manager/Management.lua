@@ -56,8 +56,9 @@ local Syntax = 0;
 getgenv().NebulaHub.GlobalVars.LoadedIn = Signal.new()
 local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 
---[[ Creator ]] do
+--[[ CREATOR ]] do
 	function Management.initialize()
+		Management.log("-", "initializing")
 		MainUI.GroupTransparency = 1
 		MainUI.Size = UDim2.fromOffset(60, 60)
 		MainUI.Position = UDim2.fromScale(0.5, 0.45)
@@ -128,12 +129,9 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Offset = Vector2.new(-0.32,0)}):Play();
 				task.wait(math.random(1, 3)/5)
 				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Offset = Vector2.new(0.1,0)}):Play();
-				task.wait(math.random(1, 3)/2)
-				TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(1.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0.6,0)}):Play();
 
 				task.delay(1.3, function()
 					makeDraggable()
-					MainUI.Parent.Dependencies.Audios.Loaded:Play();
 					LoadedIn:Fire()
 
 					MainUI.Topbar.Actions.Minimize.Activator.Activated:Connect(function()
@@ -185,15 +183,13 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 							sizeTween = TweenService:Create(MainUI, TweenInfo.new(1.7, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Size = UDim2.fromOffset(609, 430)}):Play();
 						end
 					end)
-
-					task.wait(0.3)
-					TweenService:Create(MainUI.Loading, TweenInfo.new(1, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play();
 				end)	
 			end)
 		end)		
 	end
 
 	function Management.newContent(ContentName : string, preset)
+		Management.log("*", "new content: "..ContentName)
 		local self = setmetatable({
 			ContentName = ContentName;
 		}, Methods);
@@ -261,6 +257,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 	end;
 
 	function Management.setOpenedWindow(ContentName : string)
+		Management.log("*", "opened window: "..ContentName)
 		if MainHub.Contents[ContentName] ~= nil then
 			MainHub.Contents[ContentName].Selection.UIGradient.Rotation = -232;
 			if MainHub.Contents[ContentName].Window.Visible == false then
@@ -317,7 +314,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -332,7 +329,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 		elseif NoticeType == Enums.NoticeType.Alert then
@@ -363,7 +360,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -378,7 +375,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 		elseif NoticeType == Enums.NoticeType.Notification then
@@ -409,7 +406,7 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 
@@ -424,13 +421,28 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 						TweenService:Create(newNotice.Main.Stroke, TweenInfo.new(.5, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {Transparency = 1}):Play()
 						TweenService:Create(newNotice.Main, TweenInfo.new(.5, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play()
 					end)
-					getgenv().Services.Debris:AddItem(newNotice, 3.6)
+					game:GetService("Debris"):AddItem(newNotice, 3.6)
 				end
 			end)
 		end
 	end
 	
+	function Management.log(pre, log)
+		local newLog = Assets:WaitForChild("LOGS_init"):Clone()
+		newLog.Parent = MainUI.Loading.LoadingContent.Logs
+		newLog.Name = "[LOG]:"..log
+		newLog.Text = "["..pre.."]"..": "..log
+		newLog.Visible = true;
+	end
+	
 	function Management.finish()
+		Management.log("!", "finished set up!")
+		MainUI.Parent.Dependencies.Audios.Loaded:Play();
+		TweenService:Create(MainUI.Loading.LoadingContent.Bar.MainBar.Slider, TweenInfo.new(1.3, Enum.EasingStyle.Quint), {Offset = Vector2.new(0.6,0)}):Play();
+
+		task.wait(0.3)
+		
+		TweenService:Create(MainUI.Loading, TweenInfo.new(1, Enum.EasingStyle.Quint), {GroupTransparency = 1}):Play();
 		for i, asset in pairs(Assets:GetChildren()) do
 			if asset:GetAttribute("Kept") then
 			else
@@ -442,15 +454,17 @@ local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 	end
 end;
 
---[[ Methods ]] do
+--[[ METHODS ]] do
 
 	-- Side Button
 	function Methods.setSideButtonTitle(self, SideTitle : string)
+		Management.log("*", "new side button: "..SideTitle)
 		self.SideButton.ButtonTitle.Text = SideTitle;
 		return self;
 	end;
 
 	function Methods.setSideButtonLogo(self, Logo : string)
+		Management.log("*", "new side logo: "..self.ContentName)
 		self.SideButton.Icon.ImageLabel.Image = Logo;
 		return self;
 	end;
@@ -484,6 +498,7 @@ end;
 	end;
 
 	function Methods.addWindowTitle(self, Title : string)
+		Management.log("*", "new title: "..Title)
 		Syntax += 1;
 		local newTitle = Assets:WaitForChild("WindowTitle"):Clone()
 		newTitle.Parent = self.Window;
@@ -512,6 +527,7 @@ end;
 	end
 
 	function Methods.addWindowSubtitle(self, Subtitle : string)
+		Management.log("*", "new subtitle: "..Subtitle)
 		Syntax += 1;
 		local newTitle = Assets:WaitForChild("Subtitle"):Clone()
 		newTitle.Parent = self.Window;
@@ -522,6 +538,7 @@ end;
 	end
 
 	function Methods.addUnit(self, UnitName, UnitType, Data : {any}, Connection)
+		Management.log("*", "added unit: "..UnitName..", "..UnitType.Name)
 		Syntax += 1
 		if UnitType == Enums.UnitType.Switch then
 			local newSwitchAction = Assets:WaitForChild("UnitSwitch"):Clone();
