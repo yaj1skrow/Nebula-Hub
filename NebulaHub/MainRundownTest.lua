@@ -43,8 +43,6 @@ print(getgenv().Services.RunService)
 
 task.wait(2)
 
-print(getgenv().NebulaHub.GlobalVars.LoadedIn)
-
 local LoadedIn = getgenv().NebulaHub.GlobalVars.LoadedIn
 
 local Assets = NewNebulaHub:WaitForChild("Dependencies"):WaitForChild("Assets")
@@ -83,7 +81,7 @@ LoadedIn:Connect(function()
 
 	for i, PossibleGame in pairs(GameInfo) do
 		if game.PlaceId == PossibleGame.PlaceId then
-			task.wait(0.5)
+			task.wait(0.1)
 			loadstring(game:HttpGet(tostring(PossibleGame.Loadstring)))()(getgenv())
 			break
 		end
