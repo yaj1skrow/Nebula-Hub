@@ -26,19 +26,19 @@ return function(Content)
 	else
 		print("DATA NOT FOUND")
 		DefaultValue = false
-		MM2Save:addBatch("TestValue", {
+		UniversalSave:addBatch("TestValue", {
 			Value = false
 		})
 		print("CREATED DATA")
 	end
    	Content:addUnit("Test Switch", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
-			MM2Save:addBatch("TestValue", {
+			UniversalSave:addBatch("TestValue", {
 				Value = true
 			})
 		end,
 		onDeactivated = function(MainUnit, Value)
-			MM2Save:addBatch("TestValue", {
+			UniversalSave:addBatch("TestValue", {
 				Value = false
 			})
 		end,
