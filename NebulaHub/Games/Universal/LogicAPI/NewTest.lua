@@ -18,11 +18,11 @@ local Readable = getgenv().NebulaHub.API.getGameConfig("Universal")
 print(Readable)
 
 return function(Content)
-	local API_Save_PlayerChams = Readable["TestValue"]
+	local API_Save_TestSave = Readable.TestValue
 	local DefaultValue = false
-	if API_Save_PlayerChams then
+	if API_Save_TestSave then
 		print("DATA FOUND")
-		DefaultValue = API_Save_PlayerChams.Value
+		DefaultValue = API_Save_TestSave.Value
 	else
 		print("DATA NOT FOUND")
 		DefaultValue = false
