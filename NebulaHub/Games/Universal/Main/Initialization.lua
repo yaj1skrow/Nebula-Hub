@@ -26,7 +26,8 @@ return function()
 	local Path = "https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/LogicAPI/"
 	
 	local MainLogic = {
-		"Test.lua"
+		"Test.lua";
+		"NewTest.lua"
 	}
 
 	local MainContent = Management.newContent("Universal")
