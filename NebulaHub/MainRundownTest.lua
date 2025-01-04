@@ -88,6 +88,8 @@ LoadedIn:Connect(function()
 	end
 
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/yaj1skrow/Nebula-Hub/refs/heads/main/NebulaHub/Games/Universal/Main/Initialization.lua", false))()()
+	
+	Management.finish()
 end)
 
 getgenv().NebulaHub.MainUI.Name = InitializeStringRandomizer(7)
