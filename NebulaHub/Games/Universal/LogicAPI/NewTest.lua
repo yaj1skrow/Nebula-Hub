@@ -13,7 +13,7 @@ local Management = getgenv().NebulaHub.Dependencies.Manager.Management
 local private = getgenv().NebulaHub.Loaded["Universal"].private
 
 local UniversalSave = getgenv().NebulaHub.Loaded["Universal"].ConfigData
-local Readable = getgenv().NebulaHub.API.getGameConfig("Universal")
+local Readable = getgenv().NebulaHub.API.Configuration["Universal"].GameConfig
 
 print(Readable.TestValue or "uh?")
 
