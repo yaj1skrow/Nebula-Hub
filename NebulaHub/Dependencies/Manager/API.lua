@@ -29,6 +29,7 @@ NebulaHubAPI.Configuration = {
 		makefolder(self.GameStringPath);
 		if isfile(self.ConfigPath) then
 			print("data is there so idk why this isnt working???")
+			self.GameConfig = readfile(self.ConfigPath)
 		else
 			print("data is not found apparently")
 			writefile(self.ConfigPath, getgenv().Services.HttpService:JSONEncode(self.GameConfig))
@@ -39,14 +40,6 @@ NebulaHubAPI.Configuration = {
 		}
 
 		return self
-	end
-
-	function NebulaHubAPI.getGameConfig(GameFile)
-		if NebulaHubAPI.Configuration.GamePath[GameFile] then
-			return getgenv().Services.HttpService:JSONDecode(readfile(FilePath.."/"..ConfigurationSetupPath.."/"..GameFile.."/".."gameConfigs.txt"))
-		else
-			warn(GameFile.." does not exist on local database")
-		end
 	end
 end
 
