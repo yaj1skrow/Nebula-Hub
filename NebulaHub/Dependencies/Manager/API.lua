@@ -30,7 +30,7 @@ NebulaHubAPI.Configuration = {
 		if isfile(self.ConfigPath) then
 			print("data is there so idk why this isnt working???")
 		else
-			print("data is not found apparent
+			print("data is not found apparently")
 			writefile(self.ConfigPath, getgenv().Services.HttpService:JSONEncode(self.GameConfig))
 		end
 
