@@ -12,25 +12,25 @@ local Management = getgenv().NebulaHub.Dependencies.Manager.Management
 
 local private = getgenv().NebulaHub.Loaded["MM2"].private
 
-local MM2Save = getgenv().NebulaHub.Loaded["MM2"].ConfigData
-local Readable = getgenv().NebulaHub.API.getGameConfig("MurderMystery2")
+-- local MM2Save = getgenv().NebulaHub.Loaded["MM2"].ConfigData
+-- local Readable = getgenv().NebulaHub.API.getGameConfig("MurderMystery2")
 
-print(Readable)
+-- print(Readable)
 
 return function(Content)
-	local API_Save_PlayerChams = Readable["PlayerChams"]
+	-- local API_Save_PlayerChams = Readable["PlayerChams"]
 	local DefaultValue = false
-	if API_Save_PlayerChams then
-		print("DATA FOUND")
-		DefaultValue = API_Save_PlayerChams.Value
-	else
-		print("DATA NOT FOUND")
-		DefaultValue = false
-		MM2Save:addBatch("PlayerChams", {
-			Value = true
-		})
-		print("CREATED DATA")
-	end
+	-- if API_Save_PlayerChams then
+	-- 	print("DATA FOUND")
+	-- 	DefaultValue = API_Save_PlayerChams.Value
+	-- else
+	-- 	print("DATA NOT FOUND")
+	-- 	DefaultValue = false
+	-- 	MM2Save:addBatch("PlayerChams", {
+	-- 		Value = true
+	-- 	})
+	-- 	print("CREATED DATA")
+	-- end
  	Content:addUnit("Player Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
 			MM2Save:addBatch("PlayerChams", {
