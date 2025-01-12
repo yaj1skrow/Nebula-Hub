@@ -33,9 +33,9 @@ return function(Content)
 	-- end
  	Content:addUnit("Player Chams", Enums.UnitType.Switch, {
 		onActivated = function(MainUnit, Value)	
-			MM2Save:addBatch("PlayerChams", {
-				Value = true
-			})
+			-- MM2Save:addBatch("PlayerChams", {
+			-- 	Value = true
+			-- })
 			local function createEsp(Player_)
 				if GlobalData.ChamType == "Highlight" then
 					task.spawn(function()
@@ -227,9 +227,9 @@ return function(Content)
 			end)
 		end,
 		onDeactivated = function(MainUnit, Value)
-			MM2Save:addBatch("PlayerChams", {
-				Value = false
-			})
+			-- MM2Save:addBatch("PlayerChams", {
+			-- 	Value = false
+			-- })
 			if GlobalData.Connections["Reset"] ~= nil then
 				GlobalData.Connections["Reset"]:Disconnect();
 			end
